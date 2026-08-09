@@ -31,85 +31,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.2 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-101',
-        date: 'October 12, 2023',
-        status: 'Completed',
-        workOrder: 'WO-2023-8891',
-        permitPtw: 'PTW-0992',
-        technicianNotes:
-          'Quarterly calibration checked against standard weights (10g, 50g, 500g, 1kg). Found 5g deviation on the 1kg test block. Adjusted load cell DSP parameters and re-zeroed the belt. Re-tested passing all tolerances. Environmental seals inspected and intact.',
-      },
-      {
-        id: 'h-102',
-        date: 'September 15, 2023',
-        status: 'Archived',
-        workOrder: 'WO-2023-7422',
-        permitPtw: 'PTW-0855',
-        technicianNotes:
-          'Routine preventive inspection. Belt tension checked and adjusted to 45N. Drive motor bearings lubricated with high-temp synthetic grease. Control panel dusted. No anomalies detected during dry run.',
-      },
-      {
-        id: 'h-103',
-        date: 'August 10, 2023',
-        status: 'Flagged',
-        workOrder: 'WO-2023-6101',
-        permitPtw: 'PTW-0710',
-        technicianNotes:
-          'Sensor accumulation high due to product spill event on Line B adjacent. Cleaned all optical reject sensors. Noticed slight fraying on the primary conveyor belt edge. It is operational but I am scheduling a replacement for the next major shutdown cycle to prevent mid-run failure.',
-        followupWo: 'WO-2023-6105',
-      },
-    ],
-  },
-  {
-    id: 'eq-nl-cw2',
-    name: 'Line 2 Check Weigher Calibration',
-    code: 'NL-CW-002',
-    area: 'North Logistics',
-    line: 'Line 2',
-    pmType: 'Check Weigher Calibration',
-    lastPmDate: '2026-05-18',
-    daysAgoText: '- 27 days ago',
-    lastWoPtw: 'WO-2605-145 / PTW-A-102',
-    workOrder: 'WO-2605-145',
-    ptwNo: 'PTW-A-102',
-    nextDueDate: '2026-08-18',
-    frequencyMonths: 3,
-    status: 'OK',
-    specs: {
-      calibrationWeights: '50g, 500g, 2000g Class F',
-      sensorType: 'EMFR Load Cell',
-      ipRating: 'IP69K High-Washdown',
-      serialNumber: 'CW-NL2-9102-B',
-      lastCertification: '18 May 2026',
-    },
-    telemetry: {
-      liveWeight: '1000.1 g',
-      dspSignal: '99.7%',
-      temperature: '23.1 °C',
-      beltSpeed: '1.5 m/s',
-      stability: 'Stable',
-    },
-    history: [
-      {
-        id: 'h-201',
-        date: 'May 18, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-145',
-        permitPtw: 'PTW-A-102',
-        technicianNotes:
-          'Verified accuracy with 500g and 2kg calibration blocks. Zero deviation detected. Re-greased drive rollers and checked emergency stop circuit.',
-      },
-      {
-        id: 'h-202',
-        date: 'February 18, 2026',
-        status: 'Archived',
-        workOrder: 'WO-2602-090',
-        permitPtw: 'PTW-A-040',
-        technicianNotes: 'Quarterly routine calibration. Passed test within +/- 0.2g tolerance.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-nl-nw1',
@@ -140,17 +62,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '0.9 m/s',
       stability: 'Calibrating',
     },
-    history: [
-      {
-        id: 'h-301',
-        date: 'March 01, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2603-045',
-        permitPtw: 'PTW-B-22',
-        technicianNotes:
-          'Calibrated pneumatic discharge gate and tare balance. Minor drift observed on load sensor 2.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-nl-nw2',
@@ -181,17 +93,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.1 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-401',
-        date: 'April 10, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2604-012',
-        permitPtw: 'PTW-B-45',
-        technicianNotes:
-          'Bi-annual net weight check completed. All hoppers seating correctly with clean seal rubbers.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-nl-md1',
@@ -222,25 +124,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.4 m/s',
       stability: 'Warning',
     },
-    history: [
-      {
-        id: 'h-501',
-        date: 'December 10, 2025',
-        status: 'Completed',
-        workOrder: 'WO-2512-888',
-        permitPtw: 'PTW-C-11',
-        technicianNotes:
-          'Annual coil phase check completed using standard test cards (Fe 1.5mm, Non-Fe 2.0mm, SS 2.5mm). Rejection arm stroke verified.',
-      },
-      {
-        id: 'h-502',
-        date: 'June 10, 2025',
-        status: 'Archived',
-        workOrder: 'WO-2506-120',
-        permitPtw: 'PTW-C-02',
-        technicianNotes: 'Mid-year coil inspection. Passed sensitivity test.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-nl-md2',
@@ -271,17 +155,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.3 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-601',
-        date: 'May 05, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-001',
-        permitPtw: 'PTW-C-25',
-        technicianNotes:
-          'Full sensitivity audit with test wands. Air pusher reject mechanism synchronized with conveyor encoder.',
-      },
-    ],
+    history: [],
   },
 
   // --- South Logistics ---
@@ -314,17 +188,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.0 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-701',
-        date: 'May 20, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-201',
-        permitPtw: 'PTW-S-01',
-        technicianNotes:
-          'Calibrated belt scale for Line A packing station. Static and dynamic test weights passed inside 0.1g window.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-cwb',
@@ -355,16 +219,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.1 m/s',
       stability: 'Calibrating',
     },
-    history: [
-      {
-        id: 'h-801',
-        date: 'March 15, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2603-555',
-        permitPtw: 'PTW-S-12',
-        technicianNotes: 'Routine check. Load cell zero offset adjusted.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-cwc',
@@ -395,16 +250,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.0 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-901',
-        date: 'April 10, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2604-882',
-        permitPtw: 'PTW-S-44',
-        technicianNotes: 'Standard quarterly maintenance. Belt motor brushes checked.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-cwd',
@@ -435,16 +281,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '0.8 m/s',
       stability: 'Warning',
     },
-    history: [
-      {
-        id: 'h-1001',
-        date: 'January 01, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2601-001',
-        permitPtw: 'PTW-S-99',
-        technicianNotes: 'New year overhaul calibration. Photo-eye sensor aligned.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-nwa',
@@ -475,16 +312,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.2 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-1101',
-        date: 'May 12, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-441',
-        permitPtw: 'PTW-S-101',
-        technicianNotes: 'Net scale calibration completed smoothly. Zero drift.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-nwb',
@@ -515,16 +343,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.2 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-1201',
-        date: 'May 15, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-442',
-        permitPtw: 'PTW-S-102',
-        technicianNotes: 'Gate seals lubricated and scale re-calibrated.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-nwc',
@@ -555,16 +374,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.2 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-1301',
-        date: 'May 18, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-443',
-        permitPtw: 'PTW-S-103',
-        technicianNotes: 'Routine calibration verified with test weights.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-nwd',
@@ -595,16 +405,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.2 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-1401',
-        date: 'May 20, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-444',
-        permitPtw: 'PTW-S-104',
-        technicianNotes: 'Calibration ok. All pressure regulators tuned to 6 bar.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-mda',
@@ -635,16 +436,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.3 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-1501',
-        date: 'May 05, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-901',
-        permitPtw: 'PTW-S-201',
-        technicianNotes: 'Passed all metal detection challenge cards.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-mdb',
@@ -675,16 +467,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.3 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-1601',
-        date: 'May 08, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-902',
-        permitPtw: 'PTW-S-202',
-        technicianNotes: 'Cleaned aperture and verified optical trigger.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-mdc',
@@ -715,16 +498,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.1 m/s',
       stability: 'Calibrating',
     },
-    history: [
-      {
-        id: 'h-1701',
-        date: 'March 12, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2603-903',
-        permitPtw: 'PTW-S-203',
-        technicianNotes: 'Sensitivity adjusted for high moisture product run.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-sl-mdd',
@@ -755,16 +529,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.3 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-1801',
-        date: 'May 15, 2026',
-        status: 'Completed',
-        workOrder: 'WO-2605-904',
-        permitPtw: 'PTW-S-204',
-        technicianNotes: 'Routine metal detector PM finished.',
-      },
-    ],
+    history: [],
   },
 
   // --- Table View Items (Image 3 exact matches) ---
@@ -797,16 +562,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.2 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-tbl1',
-        date: 'October 12, 2023',
-        status: 'Completed',
-        workOrder: 'WO-2023-8842',
-        permitPtw: 'PTW-0992',
-        technicianNotes: 'Monthly check weigher calibration. Verified passing tolerances.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-tbl-beta',
@@ -837,16 +593,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.0 m/s',
       stability: 'Calibrating',
     },
-    history: [
-      {
-        id: 'h-tbl2',
-        date: 'July 01, 2023',
-        status: 'Completed',
-        workOrder: 'WO-2023-4199',
-        permitPtw: 'PTW-0855',
-        technicianNotes: 'Mid-year net scale inspection. Re-zeroed scale pan.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-tbl-conveyor',
@@ -877,16 +624,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '0.7 m/s (Sluggish)',
       stability: 'Warning',
     },
-    history: [
-      {
-        id: 'h-tbl3',
-        date: 'January 15, 2023',
-        status: 'Completed',
-        workOrder: 'WO-2023-0145',
-        permitPtw: 'PTW-0710',
-        technicianNotes: 'Replaced drive belt and greased gearbox.',
-      },
-    ],
+    history: [],
   },
   {
     id: 'eq-tbl-delta',
@@ -917,15 +655,6 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
       beltSpeed: '1.8 m/s',
       stability: 'Stable',
     },
-    history: [
-      {
-        id: 'h-tbl4',
-        date: 'September 30, 2023',
-        status: 'Completed',
-        workOrder: 'WO-2023-7621',
-        permitPtw: 'PTW-0992',
-        technicianNotes: 'Sortation diverter arms aligned and cleaned.',
-      },
-    ],
+    history: [],
   },
 ];

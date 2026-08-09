@@ -50,10 +50,10 @@
 
 ---
 
-### [2026-08-09 10:18 UTC] - Milestone 5: Bulk Log Cleanup for Manual PM Entry
-- **Task**: Implemented 1-click bulk log clearance across all equipment in Firestore so the user can begin manual input cleanly.
-- **Files Created/Updated**:
-  - `src/lib/equipmentService.ts`: Added `clearAllLogsInFirestore()` function.
-  - `src/components/HistoryLogsView.tsx`: Added "Bersihkan Semua Log" button with confirmation modal.
-  - `src/App.tsx`: Wired `handleClearAllHistoryLogs` handler connected directly to Firestore.
-- **Verification**: Verified build and clean execution.
+### [2026-08-09 10:34 UTC] - Milestone 6: Complete Database History Cleanup & Scratch Reset
+- **Task**: Cleared all existing PM history logs across all 22 equipment records in Firebase Firestore and reset `INITIAL_EQUIPMENT` data template to empty (`history: []`).
+- **Files Updated**:
+  - `src/data/initialData.ts`: Stripped pre-populated history arrays to empty (`[]`).
+  - `Firestore Database`: Executed direct document updates setting `history: []` on all instruments in `ai-studio-pmtrackingdepart-b87d54fd-258d-4d78-a1e3-f58ba7458665`.
+- **Status**: The platform is now completely clean and ready for manual PM log entry.
+
