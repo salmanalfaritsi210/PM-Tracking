@@ -14,6 +14,7 @@ import {
   NavTab,
   ViewMode,
   MaintenanceHistoryEntry,
+  EquipmentSpecs,
 } from './types';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
@@ -79,6 +80,16 @@ export default function App() {
     });
   };
 
+  // Helper to get priority for PM type ordering: Check Weigher -> Net Weigher -> Metal Detector -> Routine PM
+  const getPmTypePriority = (pmType: string): number => {
+    const t = (pmType || '').toLowerCase();
+    if (t.includes('check weigher') || t.includes('checkweigher')) return 1;
+    if (t.includes('net weigher') || t.includes('netweigher')) return 2;
+    if (t.includes('metal detector')) return 3;
+    if (t.includes('routine')) return 4;
+    return 5;
+  };
+
   // Filter items based on navigation tab and FilterBar state
   const filteredEquipment = useMemo(() => {
     const list = equipmentList.filter((item) => {
@@ -111,8 +122,13 @@ export default function App() {
       return true;
     });
 
-    if (!filters.sortBy || filters.sortBy === 'Default') {
-      return list;
+    if (!filters.sortBy || filters.sortBy === 'Default' || filters.sortBy === 'PM Type') {
+      return [...list].sort((a, b) => {
+        const pA = getPmTypePriority(a.pmType);
+        const pB = getPmTypePriority(b.pmType);
+        if (pA !== pB) return pA - pB;
+        return a.name.localeCompare(b.name);
+      });
     }
 
     return [...list].sort((a, b) => {
@@ -157,6 +173,7 @@ export default function App() {
   const handleSaveLogData = (logData: {
     equipmentName?: string;
     equipmentCode?: string;
+    specs?: EquipmentSpecs;
     workOrder: string;
     ptwNo: string;
     area: 'North Logistics' | 'South Logistics' | 'Dock Area';
@@ -187,6 +204,7 @@ export default function App() {
       const updatedFields: Partial<EquipmentItem> = {
         name: logData.equipmentName?.trim() ? logData.equipmentName.trim() : selectedModalItem.name,
         code: logData.equipmentCode?.trim() ? logData.equipmentCode.trim() : selectedModalItem.code,
+        specs: logData.specs || selectedModalItem.specs,
         workOrder: logData.workOrder,
         ptwNo: logData.ptwNo,
         lastWoPtw: `${logData.workOrder} / ${logData.ptwNo}`,
@@ -207,6 +225,7 @@ export default function App() {
         id: `eq-new-${Date.now()}`,
         name: logData.equipmentName?.trim() || `${logData.line} ${logData.pmType}`,
         code: logData.equipmentCode?.trim() || `NEW-PM-${Math.floor(100 + Math.random() * 900)}`,
+        specs: logData.specs,
         area: logData.area,
         line: logData.line,
         pmType: logData.pmType,
@@ -222,6 +241,10 @@ export default function App() {
       };
       addEquipmentToFirestore(newUnit);
     }
+  };
+
+  const handleUpdateSpecs = (equipmentId: string, specs: EquipmentSpecs) => {
+    updateEquipmentInFirestore(equipmentId, { specs });
   };
 
   const handleAddHistoryNote = (equipmentId: string, entry: Omit<MaintenanceHistoryEntry, 'id'>) => {
@@ -500,11 +523,12 @@ export default function App() {
 
       {/* Slide-over Maintenance History Drawer */}
       <HistoryDrawer
-        item={selectedDrawerItem}
+        item={selectedDrawerItem ? equipmentList.find((e) => e.id === selectedDrawerItem.id) || selectedDrawerItem : null}
         onClose={() => setSelectedDrawerItem(null)}
         onAddHistoryEntry={handleAddHistoryNote}
         onDeleteHistoryEntry={handleDeleteHistoryLog}
         onOpenUpdateModal={(item) => handleOpenUpdateModal(item)}
+        onUpdateSpecs={handleUpdateSpecs}
       />
 
       {/* Update PM Log Modal Form */}

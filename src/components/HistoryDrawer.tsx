@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { EquipmentItem, MaintenanceHistoryEntry } from '../types';
+import React, { useState, useEffect } from 'react';
+import { EquipmentItem, MaintenanceHistoryEntry, EquipmentSpecs } from '../types';
 import { SmartAiInsights } from './SmartAiInsights';
 import { calculateEquipmentHealthScore } from '../lib/healthScore';
 
@@ -9,6 +9,7 @@ interface HistoryDrawerProps {
   onAddHistoryEntry: (equipmentId: string, entry: Omit<MaintenanceHistoryEntry, 'id'>) => void;
   onDeleteHistoryEntry?: (equipmentId: string, logId: string) => void;
   onOpenUpdateModal: (item: EquipmentItem) => void;
+  onUpdateSpecs?: (equipmentId: string, specs: EquipmentSpecs) => void;
 }
 
 export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
@@ -17,6 +18,7 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
   onAddHistoryEntry,
   onDeleteHistoryEntry,
   onOpenUpdateModal,
+  onUpdateSpecs,
 }) => {
   const [activeTab, setActiveTab] = useState<'history' | 'specs' | 'telemetry'>('history');
   const [newNoteText, setNewNoteText] = useState('');
@@ -24,6 +26,43 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
   const [newPtw, setNewPtw] = useState('');
   const [showAddNoteForm, setShowAddNoteForm] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  // Specification Edit States
+  const [isEditingSpecs, setIsEditingSpecs] = useState(false);
+  const [specCalibrationWeights, setSpecCalibrationWeights] = useState('');
+  const [specSensorType, setSpecSensorType] = useState('');
+  const [specIpRating, setSpecIpRating] = useState('');
+  const [specSerialNumber, setSpecSerialNumber] = useState('');
+  const [specLastCertification, setSpecLastCertification] = useState('');
+
+  useEffect(() => {
+    if (item?.specs) {
+      setSpecCalibrationWeights(item.specs.calibrationWeights || '');
+      setSpecSensorType(item.specs.sensorType || '');
+      setSpecIpRating(item.specs.ipRating || '');
+      setSpecSerialNumber(item.specs.serialNumber || '');
+      setSpecLastCertification(item.specs.lastCertification || '');
+    } else if (item) {
+      setSpecCalibrationWeights('Standard Weights (10g - 1kg)');
+      setSpecSensorType('Precision Load Cell');
+      setSpecIpRating('IP67 Washdown Grade');
+      setSpecSerialNumber(item.code);
+      setSpecLastCertification(item.lastPmDate);
+    }
+  }, [item]);
+
+  const handleSaveSpecsForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!item || !onUpdateSpecs) return;
+    onUpdateSpecs(item.id, {
+      calibrationWeights: specCalibrationWeights || 'Standard Weights (10g - 1kg)',
+      sensorType: specSensorType || 'Precision Load Cell',
+      ipRating: specIpRating || 'IP67 Washdown Grade',
+      serialNumber: specSerialNumber || item.code,
+      lastCertification: specLastCertification || item.lastPmDate,
+    });
+    setIsEditingSpecs(false);
+  };
 
   if (!item) return null;
 
@@ -348,56 +387,145 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
           {activeTab === 'specs' && (
             <div className="space-y-4">
               <div className="p-5 rounded-2xl bg-[#f7f9ff] border border-[#c3c6d5]/20 space-y-4">
-                <h4 className="font-label text-xs font-bold text-[#094cb2] uppercase tracking-widest border-b border-[#edf4ff] pb-2">
-                  Technical Specifications & Calibration Standards
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-                  <div>
-                    <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
-                      Calibration Test Weights
-                    </span>
-                    <span className="font-semibold text-[#001d32]">
-                      {item.specs?.calibrationWeights || 'Standard Weights (10g - 1kg)'}
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
-                      Sensor Type
-                    </span>
-                    <span className="font-semibold text-[#001d32]">
-                      {item.specs?.sensorType || 'Precision Load Cell'}
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
-                      IP Protection Rating
-                    </span>
-                    <span className="font-semibold text-[#001d32]">
-                      {item.specs?.ipRating || 'IP67 Washdown Grade'}
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
-                      Serial Number
-                    </span>
-                    <span className="font-mono font-semibold text-[#001d32]">
-                      {item.specs?.serialNumber || item.code}
-                    </span>
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
-                      Last External Certification
-                    </span>
-                    <span className="font-semibold text-[#001d32]">
-                      {item.specs?.lastCertification || item.lastPmDate}
-                    </span>
-                  </div>
+                <div className="flex justify-between items-center border-b border-[#edf4ff] pb-2">
+                  <h4 className="font-label text-xs font-bold text-[#094cb2] uppercase tracking-widest">
+                    Technical Specifications & Calibration Standards
+                  </h4>
+                  <button
+                    onClick={() => setIsEditingSpecs(!isEditingSpecs)}
+                    className="px-2.5 py-1 rounded-lg bg-[#edf4ff] hover:bg-[#094cb2] text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                  >
+                    <span className="material-symbols-outlined text-sm">{isEditingSpecs ? 'close' : 'edit'}</span>
+                    <span>{isEditingSpecs ? 'Batal' : 'Edit Specs'}</span>
+                  </button>
                 </div>
+
+                {isEditingSpecs ? (
+                  <form onSubmit={handleSaveSpecsForm} className="space-y-3 pt-1">
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-[#434653] font-label text-[11px] uppercase font-bold">
+                        Calibration Test Weights
+                      </label>
+                      <input
+                        type="text"
+                        value={specCalibrationWeights}
+                        onChange={(e) => setSpecCalibrationWeights(e.target.value)}
+                        className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs rounded-xl p-2.5 font-semibold focus:ring-2 focus:ring-[#094cb2]/50"
+                      />
+                    </div>
+
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-[#434653] font-label text-[11px] uppercase font-bold">
+                        Sensor Type
+                      </label>
+                      <input
+                        type="text"
+                        value={specSensorType}
+                        onChange={(e) => setSpecSensorType(e.target.value)}
+                        className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs rounded-xl p-2.5 font-semibold focus:ring-2 focus:ring-[#094cb2]/50"
+                      />
+                    </div>
+
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-[#434653] font-label text-[11px] uppercase font-bold">
+                        IP Protection Rating
+                      </label>
+                      <input
+                        type="text"
+                        value={specIpRating}
+                        onChange={(e) => setSpecIpRating(e.target.value)}
+                        className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs rounded-xl p-2.5 font-semibold focus:ring-2 focus:ring-[#094cb2]/50"
+                      />
+                    </div>
+
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-[#434653] font-label text-[11px] uppercase font-bold">
+                        Serial Number
+                      </label>
+                      <input
+                        type="text"
+                        value={specSerialNumber}
+                        onChange={(e) => setSpecSerialNumber(e.target.value)}
+                        className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs rounded-xl p-2.5 font-mono focus:ring-2 focus:ring-[#094cb2]/50"
+                      />
+                    </div>
+
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-[#434653] font-label text-[11px] uppercase font-bold">
+                        Last External Certification
+                      </label>
+                      <input
+                        type="text"
+                        value={specLastCertification}
+                        onChange={(e) => setSpecLastCertification(e.target.value)}
+                        className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs rounded-xl p-2.5 font-semibold focus:ring-2 focus:ring-[#094cb2]/50"
+                      />
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        type="submit"
+                        className="flex-1 btn-primary text-xs font-label font-bold py-2 rounded-xl cursor-pointer"
+                      >
+                        Simpan Specification
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsEditingSpecs(false)}
+                        className="px-3 bg-gray-200 hover:bg-gray-300 text-[#434653] text-xs font-label font-bold py-2 rounded-xl cursor-pointer"
+                      >
+                        Batal
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div>
+                      <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
+                        Calibration Test Weights
+                      </span>
+                      <span className="font-semibold text-[#001d32]">
+                        {item.specs?.calibrationWeights || 'Standard Weights (10g - 1kg)'}
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
+                        Sensor Type
+                      </span>
+                      <span className="font-semibold text-[#001d32]">
+                        {item.specs?.sensorType || 'Precision Load Cell'}
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
+                        IP Protection Rating
+                      </span>
+                      <span className="font-semibold text-[#001d32]">
+                        {item.specs?.ipRating || 'IP67 Washdown Grade'}
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
+                        Serial Number
+                      </span>
+                      <span className="font-mono font-semibold text-[#001d32]">
+                        {item.specs?.serialNumber || item.code}
+                      </span>
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <span className="text-[#434653] font-label text-[11px] block uppercase font-bold">
+                        Last External Certification
+                      </span>
+                      <span className="font-semibold text-[#001d32]">
+                        {item.specs?.lastCertification || item.lastPmDate}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

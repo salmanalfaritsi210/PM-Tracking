@@ -101,4 +101,25 @@
   - `src/App.tsx`: Wired `handleSaveLogData` to save equipment name and code changes to Firestore.
 - **Verification**: Verified linter and full build compilation.
 
+---
+
+### [2026-08-09 11:38 UTC] - Milestone 11: PM Type Hierarchy Sequence Sorting
+- **Task**: Updated equipment list sorting sequence to follow the strict hierarchy: `Check Weigher` -> `Net Weigher` -> `Metal Detector` -> `Routine PM`.
+- **Files & Components Updated**:
+  - `src/App.tsx`: Defined `getPmTypePriority` helper and updated default & `PM Type` sorting in `filteredEquipment`.
+  - `src/components/FilterBar.tsx`: Updated Sort By dropdown with explicit `PM Type` sorting option.
+- **Verification**: Verified linter and applet compilation.
+
+---
+
+### [2026-08-09 11:42 UTC] - Milestone 12: Edit Equipment Specifications Feature
+- **Task**: Added edit specification feature to equipment details, enabling technicians to edit calibration test weights, sensor type, IP protection rating, serial number, and last external certification.
+- **Files & Components Updated**:
+  - `src/components/HistoryDrawer.tsx`: Added "Edit Specs" button and inline form under the Specifications tab with real-time state synchronization.
+  - `src/components/UpdateLogModal.tsx`: Added Technical Specifications section with input fields for test weights, sensor type, IP rating, and serial number.
+  - `src/App.tsx`: Added `handleUpdateSpecs` handler to persist updated specifications to Firestore.
+- **Verification**: Verified linter and applet build compilation.
+
+
+
 

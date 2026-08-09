@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EquipmentItem, Area } from '../types';
+import { EquipmentItem, Area, EquipmentSpecs } from '../types';
 
 interface UpdateLogModalProps {
   isOpen: boolean;
@@ -8,6 +8,7 @@ interface UpdateLogModalProps {
   onSave: (logData: {
     equipmentName?: string;
     equipmentCode?: string;
+    specs?: EquipmentSpecs;
     workOrder: string;
     ptwNo: string;
     area: Area;
@@ -28,6 +29,11 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
 }) => {
   const [equipmentName, setEquipmentName] = useState('');
   const [equipmentCode, setEquipmentCode] = useState('');
+  const [calibrationWeights, setCalibrationWeights] = useState('');
+  const [sensorType, setSensorType] = useState('');
+  const [ipRating, setIpRating] = useState('');
+  const [serialNumber, setSerialNumber] = useState('');
+  const [lastCertification, setLastCertification] = useState('');
   const [workOrder, setWorkOrder] = useState('');
   const [ptwNo, setPtwNo] = useState('');
   const [area, setArea] = useState<Area | ''>('');
@@ -43,6 +49,11 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
     if (selectedEquipment) {
       setEquipmentName(selectedEquipment.name || '');
       setEquipmentCode(selectedEquipment.code || '');
+      setCalibrationWeights(selectedEquipment.specs?.calibrationWeights || 'Standard Weights (10g - 1kg)');
+      setSensorType(selectedEquipment.specs?.sensorType || 'Precision Load Cell');
+      setIpRating(selectedEquipment.specs?.ipRating || 'IP67 Washdown Grade');
+      setSerialNumber(selectedEquipment.specs?.serialNumber || selectedEquipment.code || '');
+      setLastCertification(selectedEquipment.specs?.lastCertification || selectedEquipment.lastPmDate || '');
       setWorkOrder(selectedEquipment.workOrder || 'WO-2026-0891');
       setPtwNo(selectedEquipment.ptwNo || 'PTW-442-A');
       setArea(selectedEquipment.area);
@@ -53,6 +64,11 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
     } else {
       setEquipmentName('');
       setEquipmentCode('');
+      setCalibrationWeights('Standard Weights (10g - 1kg)');
+      setSensorType('Precision Load Cell');
+      setIpRating('IP67 Washdown Grade');
+      setSerialNumber('');
+      setLastCertification('');
       setWorkOrder('');
       setPtwNo('');
       setArea('');
@@ -88,6 +104,13 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
     onSave({
       equipmentName,
       equipmentCode,
+      specs: {
+        calibrationWeights,
+        sensorType,
+        ipRating,
+        serialNumber: serialNumber || equipmentCode,
+        lastCertification: lastCertification || lastPmDate,
+      },
       workOrder,
       ptwNo,
       area: area as Area,
@@ -291,6 +314,68 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
                     <option value="Metal Detector Calibration">Metal Detector Calibration</option>
                     <option value="Routine PM">Routine PM</option>
                   </select>
+                </div>
+              </div>
+            </div>
+
+            <hr className="border-t border-[#edf4ff]" />
+
+            {/* TECHNICAL SPECIFICATIONS SECTION */}
+            <div className="space-y-4">
+              <h3 className="font-label text-xs sm:text-sm font-bold text-[#094cb2] uppercase tracking-wider">
+                Technical Specifications & Standards
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]">
+                    Calibration Test Weights
+                  </label>
+                  <input
+                    type="text"
+                    value={calibrationWeights}
+                    onChange={(e) => setCalibrationWeights(e.target.value)}
+                    placeholder="e.g. Standard Weights (10g - 1kg)"
+                    className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs sm:text-sm rounded-xl focus:ring-2 focus:ring-[#094cb2]/50 focus:border-[#094cb2] block w-full p-3 font-semibold"
+                  />
+                </div>
+
+                <div className="flex flex-col space-y-1.5">
+                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]">
+                    Sensor Type
+                  </label>
+                  <input
+                    type="text"
+                    value={sensorType}
+                    onChange={(e) => setSensorType(e.target.value)}
+                    placeholder="e.g. Precision Load Cell"
+                    className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs sm:text-sm rounded-xl focus:ring-2 focus:ring-[#094cb2]/50 focus:border-[#094cb2] block w-full p-3 font-semibold"
+                  />
+                </div>
+
+                <div className="flex flex-col space-y-1.5">
+                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]">
+                    IP Rating
+                  </label>
+                  <input
+                    type="text"
+                    value={ipRating}
+                    onChange={(e) => setIpRating(e.target.value)}
+                    placeholder="e.g. IP67 Washdown Grade"
+                    className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs sm:text-sm rounded-xl focus:ring-2 focus:ring-[#094cb2]/50 focus:border-[#094cb2] block w-full p-3 font-semibold"
+                  />
+                </div>
+
+                <div className="flex flex-col space-y-1.5">
+                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]">
+                    Serial Number
+                  </label>
+                  <input
+                    type="text"
+                    value={serialNumber}
+                    onChange={(e) => setSerialNumber(e.target.value)}
+                    placeholder="e.g. SN-88203-A"
+                    className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs sm:text-sm rounded-xl focus:ring-2 focus:ring-[#094cb2]/50 focus:border-[#094cb2] block w-full p-3 font-mono"
+                  />
                 </div>
               </div>
             </div>

@@ -115,7 +115,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onChange={(e) => handleSelectChange('sortBy', e.target.value)}
               className="w-full bg-[#e3edff] border border-[#094cb2]/20 rounded-xl py-2 pl-3.5 pr-8 text-xs sm:text-sm font-label text-[#094cb2] focus:ring-2 focus:ring-[#094cb2]/50 cursor-pointer shadow-2xs font-bold"
             >
-              <option value="Default">Sort: Default</option>
+              <option value="Default">Sort: Default (PM Type)</option>
+              <option value="PM Type">Sort: PM Type</option>
               <option value="Next Due Date">Sort: Next Due Date</option>
               <option value="Status">Sort: Status</option>
               <option value="Alphabetical Name">Sort: Alphabetical Name</option>
