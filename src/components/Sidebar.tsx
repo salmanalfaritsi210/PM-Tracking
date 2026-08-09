@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavTab } from '../types';
+import logoImg from '../assets/images/instrumentation_logo_1786301198901.jpg';
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -27,13 +28,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="mb-6 px-2 flex items-center justify-between">
         <div
           onClick={() => handleNavClick('dashboard')}
-          className="cursor-pointer hover:opacity-85 transition-opacity"
+          className="flex items-center gap-3 cursor-pointer hover:opacity-85 transition-opacity"
           title="Go to Dashboard"
         >
-          <h1 className="font-headline text-xl text-[#001d32] font-bold tracking-tight">
-            PM Tracking
-          </h1>
-          <p className="font-label text-xs font-semibold text-[#434653] mt-0.5">Instrumentation Logistics Department</p>
+          <div className="w-10 h-10 rounded-xl bg-white overflow-hidden border border-[#094cb2]/20 flex items-center justify-center shadow-xs shrink-0 p-0.5">
+            <img
+              src={logoImg}
+              alt="Instrumentation Logo"
+              className="w-full h-full object-cover rounded-lg"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+          <div>
+            <h1 className="font-headline text-lg text-[#001d32] font-bold tracking-tight leading-tight">
+              PM Tracking
+            </h1>
+            <p className="font-label text-[11px] font-semibold text-[#434653] leading-tight">Instrumentation Dept</p>
+          </div>
         </div>
         {/* Mobile close button */}
         <button

@@ -122,18 +122,18 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                     onClick={() => {
                       onClearAllLogs();
                       setConfirmClearAll(false);
-                      setToastMessage('Semua log riwayat pemeliharaan telah dibersihkan.');
+                      setToastMessage('All maintenance history logs have been cleared.');
                       setTimeout(() => setToastMessage(null), 3500);
                     }}
                     className="px-2.5 py-1 rounded-lg bg-[#ba1a1a] text-white text-xs font-bold hover:bg-[#931313] transition-colors cursor-pointer"
                   >
-                    Ya, Bersihkan
+                    Yes, Clear All
                   </button>
                   <button
                     onClick={() => setConfirmClearAll(false)}
                     className="px-2 py-1 rounded-lg bg-gray-200 text-[#434653] text-xs font-bold hover:bg-gray-300 transition-colors cursor-pointer"
                   >
-                    Batal
+                    Cancel
                   </button>
                 </div>
               ) : (
@@ -142,7 +142,7 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                   className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#ffdad6]/60 text-[#ba1a1a] hover:bg-[#ffdad6] font-label text-xs font-bold transition-colors cursor-pointer border border-[#ba1a1a]/20"
                 >
                   <span className="material-symbols-outlined text-base">delete_sweep</span>
-                  <span>Bersihkan Semua Log</span>
+                  <span>Clear All Logs</span>
                 </button>
               )}
             </div>
@@ -232,18 +232,18 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                       <td className="py-3.5 px-4 text-right">
                         {isConfirming ? (
                           <div className="inline-flex items-center gap-1 bg-[#ffdad6] p-1 rounded-xl">
-                            <span className="text-[11px] font-bold text-[#ba1a1a] px-1">Hapus?</span>
+                            <span className="text-[11px] font-bold text-[#ba1a1a] px-1">Delete?</span>
                             <button
                               onClick={() => handleDelete(log.equipmentId, log.logId)}
                               className="px-2 py-0.5 rounded-lg bg-[#ba1a1a] text-white text-xs font-bold hover:bg-[#931313] transition-colors cursor-pointer"
                             >
-                              Ya
+                              Yes
                             </button>
                             <button
                               onClick={() => setDeleteConfirmId(null)}
                               className="px-2 py-0.5 rounded-lg bg-gray-200 text-[#434653] text-xs font-bold hover:bg-gray-300 transition-colors cursor-pointer"
                             >
-                              Batal
+                              Cancel
                             </button>
                           </div>
                         ) : (
@@ -253,7 +253,7 @@ export const HistoryLogsView: React.FC<HistoryLogsViewProps> = ({
                             title="Delete this log entry"
                           >
                             <span className="material-symbols-outlined text-base">delete</span>
-                            <span>Hapus</span>
+                            <span>Delete</span>
                           </button>
                         )}
                       </td>

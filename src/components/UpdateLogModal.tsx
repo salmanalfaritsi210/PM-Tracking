@@ -225,7 +225,7 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
                 {/* Equipment Name */}
                 <div className="flex flex-col space-y-1.5 md:col-span-2">
                   <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="equipment-name">
-                    Equipment Name (Nama Equipment)
+                    Equipment Name
                   </label>
                   <input
                     id="equipment-name"
@@ -240,7 +240,7 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
                 {/* Equipment Code / Location Code */}
                 <div className="flex flex-col space-y-1.5 md:col-span-2">
                   <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="equipment-code">
-                    Location / Equipment Code (Kode Lokasi)
+                    Location / Equipment Code
                   </label>
                   <input
                     id="equipment-code"

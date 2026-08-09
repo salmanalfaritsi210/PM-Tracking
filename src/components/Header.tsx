@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavTab, ViewMode } from '../types';
+import logoImg from '../assets/images/instrumentation_logo_1786301198901.jpg';
 
 interface HeaderProps {
   currentTab: NavTab;
@@ -45,8 +46,13 @@ export const Header: React.FC<HeaderProps> = ({
           className="flex items-center gap-3 cursor-pointer hover:opacity-85 transition-opacity"
           title="Go to Dashboard"
         >
-          <div className="w-9 h-9 rounded-xl bg-[#094cb2] flex items-center justify-center text-white shadow-xs shrink-0">
-            <span className="material-symbols-outlined text-2xl">precision_manufacturing</span>
+          <div className="w-10 h-10 rounded-xl bg-white overflow-hidden border border-[#094cb2]/20 flex items-center justify-center shadow-xs shrink-0 p-0.5">
+            <img
+              src={logoImg}
+              alt="Instrumentation Logo"
+              className="w-full h-full object-cover rounded-lg"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div className="flex flex-col justify-center">
             <h2 className="font-headline text-lg sm:text-xl font-bold text-[#094cb2] tracking-tight leading-tight">

@@ -314,7 +314,7 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                       <div className="mb-3 p-2.5 rounded-xl bg-[#ffdad6]/40 border border-[#ba1a1a]/30 flex items-center justify-between text-xs animate-in fade-in">
                         <span className="font-label font-bold text-[#ba1a1a] flex items-center gap-1">
                           <span className="material-symbols-outlined text-sm">warning</span>
-                          Hapus log ini?
+                          Delete this log entry?
                         </span>
                         <div className="flex items-center gap-1.5">
                           <button
@@ -324,13 +324,13 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                             }}
                             className="px-2.5 py-1 rounded-lg bg-[#ba1a1a] hover:bg-[#931313] text-white font-label font-bold cursor-pointer"
                           >
-                            Hapus
+                            Delete
                           </button>
                           <button
                             onClick={() => setConfirmDeleteId(null)}
                             className="px-2 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-[#434653] font-label font-bold cursor-pointer"
                           >
-                            Batal
+                            Cancel
                           </button>
                         </div>
                       </div>
@@ -396,7 +396,7 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                     className="px-2.5 py-1 rounded-lg bg-[#edf4ff] hover:bg-[#094cb2] text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
                   >
                     <span className="material-symbols-outlined text-sm">{isEditingSpecs ? 'close' : 'edit'}</span>
-                    <span>{isEditingSpecs ? 'Batal' : 'Edit Specs'}</span>
+                    <span>{isEditingSpecs ? 'Cancel' : 'Edit Specs'}</span>
                   </button>
                 </div>
 
@@ -467,14 +467,14 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                         type="submit"
                         className="flex-1 btn-primary text-xs font-label font-bold py-2 rounded-xl cursor-pointer"
                       >
-                        Simpan Specification
+                        Save Specifications
                       </button>
                       <button
                         type="button"
                         onClick={() => setIsEditingSpecs(false)}
                         className="px-3 bg-gray-200 hover:bg-gray-300 text-[#434653] text-xs font-label font-bold py-2 rounded-xl cursor-pointer"
                       >
-                        Batal
+                        Cancel
                       </button>
                     </div>
                   </form>
