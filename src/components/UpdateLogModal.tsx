@@ -6,6 +6,8 @@ interface UpdateLogModalProps {
   onClose: () => void;
   selectedEquipment?: EquipmentItem | null;
   onSave: (logData: {
+    equipmentName?: string;
+    equipmentCode?: string;
     workOrder: string;
     ptwNo: string;
     area: Area;
@@ -24,6 +26,8 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
   selectedEquipment,
   onSave,
 }) => {
+  const [equipmentName, setEquipmentName] = useState('');
+  const [equipmentCode, setEquipmentCode] = useState('');
   const [workOrder, setWorkOrder] = useState('');
   const [ptwNo, setPtwNo] = useState('');
   const [area, setArea] = useState<Area | ''>('');
@@ -37,6 +41,8 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
   // Pre-fill form if editing an existing unit
   useEffect(() => {
     if (selectedEquipment) {
+      setEquipmentName(selectedEquipment.name || '');
+      setEquipmentCode(selectedEquipment.code || '');
       setWorkOrder(selectedEquipment.workOrder || 'WO-2026-0891');
       setPtwNo(selectedEquipment.ptwNo || 'PTW-442-A');
       setArea(selectedEquipment.area);
@@ -45,6 +51,8 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
       setLastPmDate(selectedEquipment.lastPmDate || new Date().toISOString().split('T')[0]);
       setFrequencyMonths(selectedEquipment.frequencyMonths || 3);
     } else {
+      setEquipmentName('');
+      setEquipmentCode('');
       setWorkOrder('');
       setPtwNo('');
       setArea('');
@@ -78,6 +86,8 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
     }
 
     onSave({
+      equipmentName,
+      equipmentCode,
       workOrder,
       ptwNo,
       area: area as Area,
@@ -189,6 +199,36 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
                 Location & Equipment
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Equipment Name */}
+                <div className="flex flex-col space-y-1.5 md:col-span-2">
+                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="equipment-name">
+                    Equipment Name (Nama Equipment)
+                  </label>
+                  <input
+                    id="equipment-name"
+                    type="text"
+                    value={equipmentName}
+                    onChange={(e) => setEquipmentName(e.target.value)}
+                    placeholder="e.g. Line 1 PM or Line 1 Metal Detector"
+                    className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs sm:text-sm rounded-xl focus:ring-2 focus:ring-[#094cb2]/50 focus:border-[#094cb2] block w-full p-3 transition-colors placeholder:text-[#434653]/50 font-bold"
+                  />
+                </div>
+
+                {/* Equipment Code / Location Code */}
+                <div className="flex flex-col space-y-1.5 md:col-span-2">
+                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="equipment-code">
+                    Location / Equipment Code (Kode Lokasi)
+                  </label>
+                  <input
+                    id="equipment-code"
+                    type="text"
+                    value={equipmentCode}
+                    onChange={(e) => setEquipmentCode(e.target.value)}
+                    placeholder="e.g. SL-NW-042 or NL-CW-001"
+                    className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs sm:text-sm rounded-xl focus:ring-2 focus:ring-[#094cb2]/50 focus:border-[#094cb2] block w-full p-3 transition-colors font-mono placeholder:text-[#434653]/50"
+                  />
+                </div>
+
                 {/* Select Area */}
                 <div className="flex flex-col space-y-1.5">
                   <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="area">

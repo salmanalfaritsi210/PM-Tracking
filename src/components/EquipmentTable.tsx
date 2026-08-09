@@ -7,6 +7,7 @@ interface EquipmentTableProps {
   items: EquipmentItem[];
   onSelect: (item: EquipmentItem) => void;
   onQuickLog: (item: EquipmentItem) => void;
+  onEditEquipment?: (item: EquipmentItem) => void;
   onBulkUpdate?: (selectedIds: string[], updates: BulkUpdateData) => void;
 }
 
@@ -14,6 +15,7 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
   items,
   onSelect,
   onQuickLog,
+  onEditEquipment,
   onBulkUpdate,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -343,7 +345,12 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
                         <div className="font-bold text-[#001d32] text-sm sm:text-base group-hover:text-[#094cb2] transition-colors">
                           {item.name}
                         </div>
-                        <div className="text-xs text-[#434653] font-mono mt-0.5">{item.code}</div>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                          <span className="text-xs text-[#434653] font-mono">{item.code}</span>
+                          <span className="px-2 py-0.5 rounded-md bg-[#edf4ff] text-[#094cb2] text-[11px] font-label font-semibold border border-[#094cb2]/10">
+                            {item.pmType}
+                          </span>
+                        </div>
                       </td>
 
                       {/* Area & Line */}
@@ -405,16 +412,30 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
 
                       {/* Action Button */}
                       <td className="py-4 px-4 sm:px-6 text-right">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onQuickLog(item);
-                          }}
-                          className="text-[#094cb2] hover:text-[#3366cc] font-label text-xs sm:text-sm font-bold inline-flex items-center justify-end gap-1 px-3 py-1.5 rounded-lg hover:bg-[#d8eaff] transition-all cursor-pointer"
-                        >
-                          <span>Log PM</span>
-                          <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          {onEditEquipment && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEditEquipment(item);
+                              }}
+                              className="p-1.5 rounded-lg text-[#434653] hover:text-[#094cb2] hover:bg-[#edf4ff] transition-all cursor-pointer"
+                              title="Edit Equipment Name & Code"
+                            >
+                              <span className="material-symbols-outlined text-base">edit</span>
+                            </button>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onQuickLog(item);
+                            }}
+                            className="text-[#094cb2] hover:text-[#3366cc] font-label text-xs sm:text-sm font-bold inline-flex items-center justify-end gap-1 px-3 py-1.5 rounded-lg hover:bg-[#d8eaff] transition-all cursor-pointer"
+                          >
+                            <span>Log PM</span>
+                            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

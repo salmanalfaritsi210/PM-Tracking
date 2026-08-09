@@ -57,6 +57,7 @@ export interface FilterState {
   status: string;
   dateRange: string;
   search: string;
+  sortBy: string;
 }
 
 export type NavTab = 

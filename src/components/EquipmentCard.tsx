@@ -6,12 +6,14 @@ interface EquipmentCardProps {
   item: EquipmentItem;
   onSelect: (item: EquipmentItem) => void;
   onQuickLog: (item: EquipmentItem) => void;
+  onEdit?: (item: EquipmentItem) => void;
 }
 
 export const EquipmentCard: React.FC<EquipmentCardProps> = ({
   item,
   onSelect,
   onQuickLog,
+  onEdit,
 }) => {
   const isOverdue = item.status === 'Overdue';
   const isDueSoon = item.status === 'Due Soon';
@@ -129,17 +131,32 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
         </div>
       </div>
 
-      {/* Quick Log Button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onQuickLog(item);
-        }}
-        className="w-full bg-[#d8eaff] hover:bg-[#094cb2] hover:text-white text-[#094cb2] font-label font-bold text-xs sm:text-sm py-2 px-3 rounded-xl transition-all flex justify-center items-center gap-2 cursor-pointer shadow-2xs"
-      >
-        <span className="material-symbols-outlined text-base">edit_note</span>
-        <span>Quick Log</span>
-      </button>
+      {/* Bottom Action Buttons */}
+      <div className="flex items-center gap-2 relative z-10">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onQuickLog(item);
+          }}
+          className="flex-1 bg-[#d8eaff] hover:bg-[#094cb2] hover:text-white text-[#094cb2] font-label font-bold text-xs sm:text-sm py-2 px-3 rounded-xl transition-all flex justify-center items-center gap-1.5 cursor-pointer shadow-2xs"
+        >
+          <span className="material-symbols-outlined text-base">edit_note</span>
+          <span>Quick Log</span>
+        </button>
+
+        {onEdit && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(item);
+            }}
+            className="p-2 rounded-xl bg-[#edf4ff] hover:bg-[#094cb2] text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold cursor-pointer shadow-2xs"
+            title="Edit Equipment Name & Code"
+          >
+            <span className="material-symbols-outlined text-base">edit</span>
+          </button>
+        )}
+      </div>
     </article>
   );
 };

@@ -57,3 +57,48 @@
   - `Firestore Database`: Executed direct document updates setting `history: []` on all instruments in `ai-studio-pmtrackingdepart-b87d54fd-258d-4d78-a1e3-f58ba7458665`.
 - **Status**: The platform is now completely clean and ready for manual PM log entry.
 
+---
+
+### [2026-08-09 11:14 UTC] - Milestone 7: Focus Mode - PM Type Updated to "Routine PM"
+- **Task**: Updated selected equipment items (`eq-sl-cwb` & `eq-sl-cwc`) PM type to "Routine PM" across `initialData.ts` and Firestore database.
+- **Files & UI Updated**:
+  - `src/data/initialData.ts`: Updated `pmType` and name for South Logistics Line B and Line C items.
+  - `src/components/EquipmentTable.tsx`: Displayed `pmType` badge tag inside equipment table cells for clear visual tracking.
+  - `Firestore Database`: Synchronized updated `pmType` fields to live Firestore collection.
+- **Verification**: Verified linting and compilation success.
+
+---
+
+### [2026-08-09 11:18 UTC] - Milestone 8: Renamed North Logistics Equipment Items
+- **Task**: Renamed 4 equipment items in the North Logistics area as requested:
+  - `Alpha Check Weigher` -> `Line 1 PM` (`eq-tbl-alpha`)
+  - `Conveyor Motor Assembly` -> `Line 2 PM` (`eq-tbl-conveyor`)
+  - `Metal Detector Line 1` -> `Line 1 Metal Detector` (`eq-nl-md1`)
+  - `Metal Detector Line 2` -> `Line 2 Metal Detector` (`eq-nl-md2`)
+- **Files & DB Updated**:
+  - `src/data/initialData.ts`: Updated equipment item names.
+  - `Firestore Database`: Updated live documents in Firestore collection.
+- **Verification**: Linter and applet compilation passed smoothly.
+
+---
+
+### [2026-08-09 11:21 UTC] - Milestone 9: Sorting Dropdown Added to FilterBar
+- **Task**: Added dynamic sorting dropdown to `FilterBar` supporting 'Next Due Date', 'Status', and 'Alphabetical Name'.
+- **Files Updated**:
+  - `src/types.ts`: Extended `FilterState` interface with `sortBy` property.
+  - `src/components/FilterBar.tsx`: Added styled Sort By dropdown selector with active filter reset support.
+  - `src/App.tsx`: Implemented sorting logic in `filteredEquipment` memo.
+- **Verification**: Verified TypeScript types and build compilation.
+
+---
+
+### [2026-08-09 11:25 UTC] - Milestone 10: Equipment Name & Location Code Editing Feature
+- **Task**: Added direct edit capability for Equipment Name (`name`) and Location/Equipment Code (`code`, e.g., 'SL-NW-042').
+- **Files & UI Updated**:
+  - `src/components/UpdateLogModal.tsx`: Added form fields for Equipment Name and Location Code with placeholders.
+  - `src/components/HistoryDrawer.tsx`: Added "Edit Info" header action button to trigger editing.
+  - `src/components/EquipmentCard.tsx` & `src/components/EquipmentTable.tsx`: Added quick-edit icon buttons on card and table layouts.
+  - `src/App.tsx`: Wired `handleSaveLogData` to save equipment name and code changes to Firestore.
+- **Verification**: Verified linter and full build compilation.
+
+

@@ -26,6 +26,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     filters.pmType !== 'All' ||
     filters.status !== 'All' ||
     filters.dateRange !== 'All' ||
+    (filters.sortBy && filters.sortBy !== 'Default') ||
     filters.search !== '';
 
   return (
@@ -104,6 +105,20 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               <option value="Next 30 Days">Next 30 Days</option>
               <option value="Next 60 Days">Next 60 Days</option>
               <option value="Overdue">Overdue Only</option>
+            </select>
+          </div>
+
+          {/* Sort By Filter */}
+          <div className="flex-1 sm:flex-none min-w-[160px]">
+            <select
+              value={filters.sortBy || 'Default'}
+              onChange={(e) => handleSelectChange('sortBy', e.target.value)}
+              className="w-full bg-[#e3edff] border border-[#094cb2]/20 rounded-xl py-2 pl-3.5 pr-8 text-xs sm:text-sm font-label text-[#094cb2] focus:ring-2 focus:ring-[#094cb2]/50 cursor-pointer shadow-2xs font-bold"
+            >
+              <option value="Default">Sort: Default</option>
+              <option value="Next Due Date">Sort: Next Due Date</option>
+              <option value="Status">Sort: Status</option>
+              <option value="Alphabetical Name">Sort: Alphabetical Name</option>
             </select>
           </div>
 

@@ -97,7 +97,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
   },
   {
     id: 'eq-nl-md1',
-    name: 'Metal Detector Line 1',
+    name: 'Line 1 Metal Detector',
     code: 'NL-MD-101',
     area: 'North Logistics',
     line: 'Line 1',
@@ -128,7 +128,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
   },
   {
     id: 'eq-nl-md2',
-    name: 'Metal Detector Line 2',
+    name: 'Line 2 Metal Detector',
     code: 'NL-MD-102',
     area: 'North Logistics',
     line: 'Line 2',
@@ -192,11 +192,11 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
   },
   {
     id: 'eq-sl-cwb',
-    name: 'Line B Check Weigher Calibration',
+    name: 'Line B Routine PM',
     code: 'SL-CW-202',
     area: 'South Logistics',
     line: 'Line B',
-    pmType: 'Check Weigher Calibration',
+    pmType: 'Routine PM',
     lastPmDate: '2026-03-15',
     daysAgoText: '- 91 days ago',
     lastWoPtw: 'WO-2603-555 / PTW-S-12',
@@ -223,11 +223,11 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
   },
   {
     id: 'eq-sl-cwc',
-    name: 'Line C Check Weigher Calibration',
+    name: 'Line C Routine PM',
     code: 'SL-CW-203',
     area: 'South Logistics',
     line: 'Line C',
-    pmType: 'Check Weigher Calibration',
+    pmType: 'Routine PM',
     lastPmDate: '2026-04-10',
     daysAgoText: '- 65 days ago',
     lastWoPtw: 'WO-2604-882 / PTW-S-44',
@@ -535,7 +535,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
   // --- Table View Items (Image 3 exact matches) ---
   {
     id: 'eq-tbl-alpha',
-    name: 'Alpha Check Weigher',
+    name: 'Line 1 PM',
     code: 'NL-CW-001',
     area: 'North Logistics',
     line: 'Line 1',
@@ -597,7 +597,7 @@ export const INITIAL_EQUIPMENT: EquipmentItem[] = [
   },
   {
     id: 'eq-tbl-conveyor',
-    name: 'Conveyor Motor Assembly',
+    name: 'Line 2 PM',
     code: 'NL-LM-112',
     area: 'North Logistics',
     line: 'Line 2',

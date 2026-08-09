@@ -49,6 +49,7 @@ export default function App() {
     status: 'All',
     dateRange: 'All',
     search: '',
+    sortBy: 'Default',
   });
 
   // Drawer & Modals State
@@ -74,12 +75,13 @@ export default function App() {
       status: 'All',
       dateRange: 'All',
       search: '',
+      sortBy: 'Default',
     });
   };
 
   // Filter items based on navigation tab and FilterBar state
   const filteredEquipment = useMemo(() => {
-    return equipmentList.filter((item) => {
+    const list = equipmentList.filter((item) => {
       // Nav tab filters
       if (currentTab === 'north' && item.area !== 'North Logistics') return false;
       if (currentTab === 'south' && item.area !== 'South Logistics') return false;
@@ -108,6 +110,29 @@ export default function App() {
 
       return true;
     });
+
+    if (!filters.sortBy || filters.sortBy === 'Default') {
+      return list;
+    }
+
+    return [...list].sort((a, b) => {
+      if (filters.sortBy === 'Next Due Date') {
+        const dateA = new Date(a.nextDueDate).getTime() || 0;
+        const dateB = new Date(b.nextDueDate).getTime() || 0;
+        return dateA - dateB;
+      }
+      if (filters.sortBy === 'Status') {
+        const statusPriority: Record<string, number> = { Overdue: 1, 'Due Soon': 2, OK: 3 };
+        const pA = statusPriority[a.status] || 99;
+        const pB = statusPriority[b.status] || 99;
+        if (pA !== pB) return pA - pB;
+        return new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime();
+      }
+      if (filters.sortBy === 'Alphabetical Name') {
+        return a.name.localeCompare(b.name);
+      }
+      return 0;
+    });
   }, [equipmentList, currentTab, filters]);
 
   // Separate by Area sections for Dashboard Grid view
@@ -130,6 +155,8 @@ export default function App() {
   };
 
   const handleSaveLogData = (logData: {
+    equipmentName?: string;
+    equipmentCode?: string;
     workOrder: string;
     ptwNo: string;
     area: 'North Logistics' | 'South Logistics' | 'Dock Area';
@@ -158,6 +185,8 @@ export default function App() {
     if (selectedModalItem) {
       // Update existing item in Firestore
       const updatedFields: Partial<EquipmentItem> = {
+        name: logData.equipmentName?.trim() ? logData.equipmentName.trim() : selectedModalItem.name,
+        code: logData.equipmentCode?.trim() ? logData.equipmentCode.trim() : selectedModalItem.code,
         workOrder: logData.workOrder,
         ptwNo: logData.ptwNo,
         lastWoPtw: `${logData.workOrder} / ${logData.ptwNo}`,
@@ -176,8 +205,8 @@ export default function App() {
       // Add brand new PM unit in Firestore
       const newUnit: EquipmentItem = {
         id: `eq-new-${Date.now()}`,
-        name: `${logData.line} ${logData.pmType}`,
-        code: `NEW-PM-${Math.floor(100 + Math.random() * 900)}`,
+        name: logData.equipmentName?.trim() || `${logData.line} ${logData.pmType}`,
+        code: logData.equipmentCode?.trim() || `NEW-PM-${Math.floor(100 + Math.random() * 900)}`,
         area: logData.area,
         line: logData.line,
         pmType: logData.pmType,
@@ -360,6 +389,7 @@ export default function App() {
               items={filteredEquipment}
               onSelect={(item) => setSelectedDrawerItem(item)}
               onQuickLog={(item) => setSelectedDrawerItem(item)}
+              onEditEquipment={(item) => handleOpenUpdateModal(item)}
               onBulkUpdate={handleBulkUpdate}
             />
           ) : (
@@ -388,6 +418,7 @@ export default function App() {
                           item={item}
                           onSelect={(item) => setSelectedDrawerItem(item)}
                           onQuickLog={(item) => setSelectedDrawerItem(item)}
+                          onEdit={(item) => handleOpenUpdateModal(item)}
                         />
                       ))}
                     </div>
@@ -418,6 +449,7 @@ export default function App() {
                           item={item}
                           onSelect={(item) => setSelectedDrawerItem(item)}
                           onQuickLog={(item) => setSelectedDrawerItem(item)}
+                          onEdit={(item) => handleOpenUpdateModal(item)}
                         />
                       ))}
                     </div>
@@ -441,6 +473,7 @@ export default function App() {
                           item={item}
                           onSelect={(item) => setSelectedDrawerItem(item)}
                           onQuickLog={(item) => setSelectedDrawerItem(item)}
+                          onEdit={(item) => handleOpenUpdateModal(item)}
                         />
                       ))}
                     </div>

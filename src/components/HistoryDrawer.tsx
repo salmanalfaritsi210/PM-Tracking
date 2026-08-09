@@ -81,13 +81,24 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
               </div>
             </div>
 
-            <button
-              onClick={onClose}
-              className="p-2 rounded-full hover:bg-[#edf4ff] transition-colors text-[#434653] hover:text-[#001d32] cursor-pointer"
-              title="Close Drawer"
-            >
-              <span className="material-symbols-outlined text-xl">close</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onOpenUpdateModal(item)}
+                className="px-3 py-1.5 rounded-xl bg-[#edf4ff] hover:bg-[#094cb2] text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="Edit Equipment Name & Location Code"
+              >
+                <span className="material-symbols-outlined text-base">edit</span>
+                <span>Edit Info</span>
+              </button>
+
+              <button
+                onClick={onClose}
+                className="p-2 rounded-full hover:bg-[#edf4ff] transition-colors text-[#434653] hover:text-[#001d32] cursor-pointer"
+                title="Close Drawer"
+              >
+                <span className="material-symbols-outlined text-xl">close</span>
+              </button>
+            </div>
           </div>
 
           {/* Contextual Tabs inside Drawer */}
