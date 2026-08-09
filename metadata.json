@@ -1,0 +1,6 @@
+{
+  "name": "PM Tracking - Departemen Instrument Logistic",
+  "description": "Preventive maintenance tracking, scheduling dashboard, equipment matrix, and maintenance log history system for Instrument Department logistics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

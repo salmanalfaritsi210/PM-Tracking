@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "Equipment": {
+      "title": "Equipment Item",
+      "description": "Logistics instrumentation equipment subject to preventive maintenance tracking.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "name": { "type": "string", "description": "Equipment name" },
+        "code": { "type": "string", "description": "Equipment tag code" },
+        "area": { "type": "string", "description": "Logistics area name" },
+        "line": { "type": "string", "description": "Production or conveyor line" },
+        "pmType": { "type": "string", "description": "Preventive maintenance type" },
+        "lastPmDate": { "type": "string", "description": "Last PM execution date YYYY-MM-DD" },
+        "daysAgoText": { "type": "string", "description": "Human readable elapsed time string" },
+        "lastWoPtw": { "type": "string", "description": "Combined WO and PTW text" },
+        "workOrder": { "type": "string", "description": "Work order code" },
+        "ptwNo": { "type": "string", "description": "Permit to work number" },
+        "nextDueDate": { "type": "string", "description": "Next scheduled PM date YYYY-MM-DD" },
+        "frequencyMonths": { "type": "number", "description": "Frequency interval in months" },
+        "status": { "type": "string", "enum": ["OK", "Due Soon", "Overdue"], "description": "PM status" }
+      },
+      "required": ["id", "name", "code", "area", "status"]
+    },
+    "MaintenanceLog": {
+      "title": "Maintenance Log",
+      "description": "Historical log entry for preventive maintenance activities.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique log entry ID" },
+        "equipmentId": { "type": "string", "description": "Referenced equipment ID" },
+        "equipmentName": { "type": "string", "description": "Referenced equipment name" },
+        "date": { "type": "string", "description": "Log date" },
+        "status": { "type": "string", "description": "Activity result status" },
+        "workOrder": { "type": "string", "description": "Associated Work Order" },
+        "permitPtw": { "type": "string", "description": "Associated PTW permit" },
+        "technicianNotes": { "type": "string", "description": "Technician execution notes" }
+      },
+      "required": ["id", "equipmentId", "date"]
+    }
+  },
+  "firestore": {
+    "/equipment/{equipmentId}": {
+      "schema": { "$ref": "#/entities/Equipment" },
+      "description": "Instrumentation logistics equipment records"
+    },
+    "/logs/{logId}": {
+      "schema": { "$ref": "#/entities/MaintenanceLog" },
+      "description": "Preventive maintenance history logs"
+    }
+  }
+}

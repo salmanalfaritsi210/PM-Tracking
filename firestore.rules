@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Equipment collection rules
+    match /equipment/{equipmentId} {
+      allow read: if true; // Allow reading equipment list
+      allow create, update: if isSignedIn() || request.auth == null; // Allow tracking updates
+      allow delete: if isSignedIn();
+    }
+
+    // Maintenance Logs collection rules
+    match /logs/{logId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() || request.auth == null;
+      allow delete: if isSignedIn();
+    }
+  }
+}
