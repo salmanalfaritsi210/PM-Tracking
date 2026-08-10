@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { EquipmentItem, Area, EquipmentSpecs } from '../types';
+import { EquipmentItem, Area, EquipmentSpecs, AreaCustomizationMap, DEFAULT_AREA_CUSTOMIZATION } from '../types';
+import { hapticSuccess, hapticLight, hapticMedium } from '../utils/haptics';
 
 interface UpdateLogModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedEquipment?: EquipmentItem | null;
+  areaCustomization?: AreaCustomizationMap;
+  onOpenManageCustomization?: (area?: Area) => void;
   onSave: (logData: {
     equipmentName?: string;
     equipmentCode?: string;
@@ -25,6 +28,8 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
   isOpen,
   onClose,
   selectedEquipment,
+  areaCustomization = DEFAULT_AREA_CUSTOMIZATION,
+  onOpenManageCustomization,
   onSave,
 }) => {
   const [equipmentName, setEquipmentName] = useState('');
@@ -101,6 +106,8 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
       return;
     }
 
+    hapticSuccess();
+
     onSave({
       equipmentName,
       equipmentCode,
@@ -126,16 +133,17 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
   };
 
   const getLinesForArea = (selectedArea: string) => {
-    switch (selectedArea) {
-      case 'North Logistics':
-        return ['Line 1', 'Line 2'];
-      case 'South Logistics':
-        return ['Line A', 'Line B', 'Line C', 'Line D'];
-      case 'Dock Area':
-        return ['Dock Bay 1', 'Dock Bay 2', 'Dock Leveler Area'];
-      default:
-        return [];
+    if (!selectedArea || !(selectedArea in areaCustomization)) return [];
+    return areaCustomization[selectedArea as Area]?.lines || [];
+  };
+
+  const getPmTypesForArea = (selectedArea: string) => {
+    if (selectedArea && selectedArea in areaCustomization) {
+      return areaCustomization[selectedArea as Area]?.pmTypes || [];
     }
+    // Aggregate unique pmTypes across all areas if area is not selected yet
+    const allTypes = Object.values(areaCustomization).flatMap((ac) => ac.pmTypes);
+    return Array.from(new Set(allTypes));
   };
 
   return (
@@ -279,9 +287,16 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
 
                 {/* Select Line */}
                 <div className="flex flex-col space-y-1.5">
-                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="line">
-                    Line
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="line">
+                      Line
+                    </label>
+                    {area && (
+                      <span className="text-[11px] text-[#094cb2] font-semibold">
+                        Linked to {area}
+                      </span>
+                    )}
+                  </div>
                   <select
                     id="line"
                     disabled={!area}
@@ -302,9 +317,16 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
 
                 {/* PM Type */}
                 <div className="flex flex-col space-y-1.5 md:col-span-2">
-                  <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="pm-type">
-                    PM Type
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="font-label text-xs sm:text-sm font-semibold text-[#434653]" htmlFor="pm-type">
+                      PM Type
+                    </label>
+                    {area && (
+                      <span className="text-[11px] text-[#094cb2] font-semibold">
+                        Linked to {area}
+                      </span>
+                    )}
+                  </div>
                   <select
                     id="pm-type"
                     value={pmType}
@@ -312,12 +334,32 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
                     className="bg-white border border-[#c3c6d5]/60 text-[#001d32] text-xs sm:text-sm rounded-xl focus:ring-2 focus:ring-[#094cb2]/50 focus:border-[#094cb2] block w-full p-3 cursor-pointer"
                   >
                     <option value="" disabled>Select PM Type</option>
-                    <option value="Check Weigher Calibration">Check Weigher Calibration</option>
-                    <option value="Net Weigher Calibration">Net Weigher Calibration</option>
-                    <option value="Metal Detector Calibration">Metal Detector Calibration</option>
-                    <option value="Routine PM">Routine PM</option>
+                    {getPmTypesForArea(area).map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
                   </select>
                 </div>
+
+                {/* Quick Action to Manage / Customize Lines & PM Types for selected Area */}
+                {onOpenManageCustomization && (
+                  <div className="md:col-span-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => onOpenManageCustomization(area || 'North Logistics')}
+                      className="w-full py-2.5 px-4 rounded-xl bg-[#edf4ff] hover:bg-[#d8eaff] border border-[#094cb2]/20 text-[#094cb2] font-label text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-base">tune</span>
+                      <span>
+                        {area
+                          ? `Customize Lines & PM Types for ${area}`
+                          : 'Customize Area Lines & PM Types'}
+                      </span>
+                    </button>
+                  </div>
+                )}
+
               </div>
             </div>
 
@@ -462,7 +504,10 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
                 <input
                   type="checkbox"
                   checked={isCompleted}
-                  onChange={(e) => setIsCompleted(e.target.checked)}
+                  onChange={(e) => {
+                    hapticMedium();
+                    setIsCompleted(e.target.checked);
+                  }}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-[#c3c6d5]/40 rounded-full peer peer-focus:ring-2 peer-focus:ring-[#094cb2]/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#094cb2]" />

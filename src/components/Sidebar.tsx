@@ -1,11 +1,13 @@
 import React from 'react';
 import { NavTab } from '../types';
 import logoImg from '../assets/images/instrumentation_logo_1786301198901.jpg';
+import { hapticLight, hapticMedium } from '../utils/haptics';
 
 interface SidebarProps {
   currentTab: NavTab;
   setCurrentTab: (tab: NavTab) => void;
   onOpenUpdateModal: () => void;
+  onOpenSettings?: () => void;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
 }
@@ -14,10 +16,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentTab,
   setCurrentTab,
   onOpenUpdateModal,
+  onOpenSettings,
   isOpenMobile,
   onCloseMobile,
 }) => {
   const handleNavClick = (tab: NavTab) => {
+    hapticLight();
     setCurrentTab(tab);
     onCloseMobile();
   };
@@ -58,6 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Primary Action CTA */}
       <button
         onClick={() => {
+          hapticMedium();
           onOpenUpdateModal();
           onCloseMobile();
         }}
@@ -142,6 +147,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Footer Navigation */}
       <div className="mt-auto border-t border-[#c3c6d5]/20 pt-4 flex flex-col gap-1 font-body text-sm">
+        {onOpenSettings && (
+          <button
+            onClick={() => {
+              hapticMedium();
+              onOpenSettings();
+              onCloseMobile();
+            }}
+            className="flex items-center gap-3 px-3.5 py-2.5 text-[#094cb2] dark:text-blue-400 font-bold hover:bg-[#d8eaff] dark:hover:bg-slate-800 rounded-xl transition-all duration-200 cursor-pointer w-full text-left"
+          >
+            <span className="material-symbols-outlined text-xl">settings</span>
+            <span>Settings</span>
+          </button>
+        )}
         <a
           href="#support"
           onClick={(e) => e.preventDefault()}

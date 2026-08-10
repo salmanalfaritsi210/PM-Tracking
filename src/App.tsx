@@ -16,6 +16,9 @@ import {
   ViewMode,
   MaintenanceHistoryEntry,
   EquipmentSpecs,
+  AreaCustomizationMap,
+  Area,
+  DEFAULT_AREA_CUSTOMIZATION,
 } from './types';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
@@ -26,6 +29,8 @@ import { HistoryDrawer } from './components/HistoryDrawer';
 import { HistoryLogsView } from './components/HistoryLogsView';
 import { UpdateLogModal } from './components/UpdateLogModal';
 import { ReportModal } from './components/ReportModal';
+import { ManageAreaCustomizationModal } from './components/ManageAreaCustomizationModal';
+import { SettingsModal } from './components/SettingsModal';
 import { BottomNavBar } from './components/BottomNavBar';
 import { OfflineToast } from './components/OfflineToast';
 
@@ -77,11 +82,53 @@ export default function App() {
     sortBy: 'Default',
   });
 
+  // Area Customization State (Lines & PM Types per Area)
+  const [areaCustomization, setAreaCustomization] = useState<AreaCustomizationMap>(() => {
+    const saved = localStorage.getItem('pm_tracking_area_customization');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse area customization', e);
+      }
+    }
+    return DEFAULT_AREA_CUSTOMIZATION;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pm_tracking_area_customization', JSON.stringify(areaCustomization));
+  }, [areaCustomization]);
+
   // Drawer & Modals State
   const [selectedDrawerItem, setSelectedDrawerItem] = useState<EquipmentItem | null>(null);
   const [selectedModalItem, setSelectedModalItem] = useState<EquipmentItem | null>(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isManageCustomizationOpen, setIsManageCustomizationOpen] = useState(false);
+  const [manageCustomizationArea, setManageCustomizationArea] = useState<Area>('North Logistics');
+
+  // Dark Mode Theme State
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('pm_tracking_theme');
+    if (saved) return saved === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('pm_tracking_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('pm_tracking_theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const handleOpenManageCustomization = (initialArea?: Area) => {
+    if (initialArea) setManageCustomizationArea(initialArea);
+    setIsManageCustomizationOpen(true);
+  };
 
   // Sync drawer item if list changes
   useEffect(() => {
@@ -383,6 +430,7 @@ export default function App() {
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         onOpenUpdateModal={() => handleOpenUpdateModal(null)}
+        onOpenSettings={() => setIsSettingsModalOpen(true)}
         isOpenMobile={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
@@ -403,6 +451,7 @@ export default function App() {
           onOpenMobileSidebar={() => setIsMobileSidebarOpen(true)}
           onOpenUpdateModal={() => handleOpenUpdateModal(null)}
           onOpenReportModal={() => setIsReportModalOpen(true)}
+          onOpenSettings={() => setIsSettingsModalOpen(true)}
         />
 
         {/* Mobile Pull-to-refresh Banner */}
@@ -472,6 +521,8 @@ export default function App() {
             onOpenUpdateModal={() => handleOpenUpdateModal(null)}
             onClearFilters={handleClearFilters}
             totalFilteredCount={filteredEquipment.length}
+            areaCustomization={areaCustomization}
+            onOpenManageCustomization={handleOpenManageCustomization}
           />
 
           {/* DEDICATED HISTORY LOGS VIEW OR EQUIPMENT DISPLAY MODES */}
@@ -684,7 +735,18 @@ export default function App() {
         isOpen={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
         selectedEquipment={selectedModalItem}
+        areaCustomization={areaCustomization}
+        onOpenManageCustomization={handleOpenManageCustomization}
         onSave={handleSaveLogData}
+      />
+
+      {/* Customize Lines & PM Types Modal */}
+      <ManageAreaCustomizationModal
+        isOpen={isManageCustomizationOpen}
+        onClose={() => setIsManageCustomizationOpen(false)}
+        areaCustomization={areaCustomization}
+        initialArea={manageCustomizationArea}
+        onSaveCustomization={(updatedMap) => setAreaCustomization(updatedMap)}
       />
 
       {/* Report Modal */}
@@ -692,6 +754,14 @@ export default function App() {
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
         equipment={equipmentList}
+      />
+
+      {/* Settings / Preferences Modal */}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
       />
 
       {/* Network Online/Offline Status Notification Toast */}

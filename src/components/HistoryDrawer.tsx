@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { EquipmentItem, MaintenanceHistoryEntry, EquipmentSpecs } from '../types';
 import { SmartAiInsights } from './SmartAiInsights';
 import { calculateEquipmentHealthScore } from '../lib/healthScore';
+import { hapticSuccess, hapticWarning, hapticLight, hapticMedium } from '../utils/haptics';
 
 interface HistoryDrawerProps {
   item: EquipmentItem | null;
@@ -54,6 +55,7 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
   const handleSaveSpecsForm = (e: React.FormEvent) => {
     e.preventDefault();
     if (!item || !onUpdateSpecs) return;
+    hapticSuccess();
     onUpdateSpecs(item.id, {
       calibrationWeights: specCalibrationWeights || 'Standard Weights (10g - 1kg)',
       sensorType: specSensorType || 'Precision Load Cell',
@@ -69,6 +71,8 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
   const handleSaveNote = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNoteText.trim()) return;
+
+    hapticSuccess();
 
     const todayStr = new Date().toLocaleDateString('en-US', {
       month: 'long',
@@ -125,7 +129,10 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => onOpenUpdateModal(item)}
+                onClick={() => {
+                  hapticMedium();
+                  onOpenUpdateModal(item);
+                }}
                 className="px-3 py-1.5 rounded-xl bg-[#edf4ff] hover:bg-[#094cb2] text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
                 title="Edit Equipment Name & Location Code"
               >
@@ -146,7 +153,10 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
           {/* Contextual Tabs inside Drawer */}
           <div className="flex gap-6 border-b border-[#c3c6d5]/20 pb-0 mt-3">
             <button
-              onClick={() => setActiveTab('history')}
+              onClick={() => {
+                hapticLight();
+                setActiveTab('history');
+              }}
               className={`font-label text-xs sm:text-sm font-bold pb-2.5 -mb-[1px] transition-all cursor-pointer ${
                 activeTab === 'history'
                   ? 'text-[#094cb2] border-b-2 border-[#094cb2]'
@@ -156,7 +166,10 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
               Maintenance History ({item.history.length})
             </button>
             <button
-              onClick={() => setActiveTab('specs')}
+              onClick={() => {
+                hapticLight();
+                setActiveTab('specs');
+              }}
               className={`font-label text-xs sm:text-sm font-bold pb-2.5 -mb-[1px] transition-all cursor-pointer ${
                 activeTab === 'specs'
                   ? 'text-[#094cb2] border-b-2 border-[#094cb2]'
@@ -166,7 +179,10 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
               Specifications
             </button>
             <button
-              onClick={() => setActiveTab('telemetry')}
+              onClick={() => {
+                hapticLight();
+                setActiveTab('telemetry');
+              }}
               className={`font-label text-xs sm:text-sm font-bold pb-2.5 -mb-[1px] transition-all cursor-pointer ${
                 activeTab === 'telemetry'
                   ? 'text-[#094cb2] border-b-2 border-[#094cb2]'

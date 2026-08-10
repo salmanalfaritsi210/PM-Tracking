@@ -10,18 +10,29 @@ import { db, handleFirestoreError, OperationType } from './firebase';
 import { EquipmentItem, MaintenanceHistoryEntry } from '../types';
 import { INITIAL_EQUIPMENT } from '../data/initialData';
 import { syncEquipmentWithRealtimeDate } from './dateUtils';
+import { cacheEquipmentList, getCachedEquipmentList } from './indexedDb';
 
 const COLLECTION_NAME = 'equipment';
 
 /**
  * Subscribes to real-time updates from Firestore for all equipment.
- * If Firestore is empty on first load, seeds initial equipment data automatically.
+ * Automatically saves synced snapshots into IndexedDB for offline persistence.
+ * If Firestore fails or device is offline, falls back to IndexedDB cache.
  */
 export function subscribeEquipment(
-  onUpdate: (items: EquipmentItem[]) => void,
+  onUpdate: (items: EquipmentItem[], isFromCache?: boolean) => void,
   onError?: (err: unknown) => void
 ) {
   const colRef = collection(db, COLLECTION_NAME);
+
+  // Attempt initial offline load from IndexedDB cache immediately
+  getCachedEquipmentList().then((cached) => {
+    if (cached && cached.items.length > 0) {
+      onUpdate(cached.items, true);
+    }
+  }).catch(() => {
+    // Ignore cache error on startup
+  });
 
   return onSnapshot(
     colRef,
@@ -68,10 +79,24 @@ export function subscribeEquipment(
         }
       }
 
-      onUpdate(items);
+      // Save latest snapshot into IndexedDB cache asynchronously
+      cacheEquipmentList(items).catch((err) => {
+        console.warn('Failed to cache equipment list to IndexedDB:', err);
+      });
+
+      onUpdate(items, false);
     },
-    (error) => {
-      handleFirestoreError(error, OperationType.LIST, COLLECTION_NAME);
+    async (error) => {
+      console.warn('Firestore subscription offline/error, retrieving IndexedDB cache...', error);
+      try {
+        const cached = await getCachedEquipmentList();
+        if (cached && cached.items.length > 0) {
+          onUpdate(cached.items, true);
+        }
+      } catch (cacheErr) {
+        console.error('Failed to retrieve IndexedDB cache:', cacheErr);
+      }
+
       if (onError) onError(error);
     }
   );

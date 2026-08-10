@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { EquipmentItem } from '../types';
 import { BulkUpdateModal, BulkUpdateData } from './BulkUpdateModal';
 import { calculateEquipmentHealthScore } from '../lib/healthScore';
+import { hapticSuccess, hapticMedium, hapticLight } from '../utils/haptics';
 
 interface EquipmentTableProps {
   items: EquipmentItem[];
@@ -51,6 +52,7 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
   // Toggle selection for an individual item
   const handleToggleSelect = (id: string, e: React.MouseEvent | React.ChangeEvent) => {
     e.stopPropagation();
+    hapticLight();
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
@@ -58,6 +60,7 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
 
   // Toggle select all filtered items
   const handleToggleSelectAll = () => {
+    hapticLight();
     if (allFilteredSelected) {
       // Deselect all items in filtered list
       const filteredItemIds = new Set(items.map((i) => i.id));
@@ -71,18 +74,21 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
 
   // Select all items currently on visible page
   const handleSelectCurrentPage = () => {
+    hapticLight();
     const pageItemIds = currentItems.map((i) => i.id);
     setSelectedIds((prev) => Array.from(new Set([...prev, ...pageItemIds])));
   };
 
   // Clear all selections
   const handleClearSelection = () => {
+    hapticLight();
     setSelectedIds([]);
   };
 
   // Perform Quick Status Change for selected items
   const handleQuickStatusChange = (status: 'OK' | 'Due Soon' | 'Overdue') => {
     if (!onBulkUpdate || selectedIds.length === 0) return;
+    hapticSuccess();
     onBulkUpdate(selectedIds, { status });
     showToast(`Updated status to "${status}" for ${selectedIds.length} items`);
   };
@@ -90,6 +96,7 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
   // Perform Quick Log PM for all selected items (sets last PM to today, status to OK)
   const handleQuickLogBulk = () => {
     if (!onBulkUpdate || selectedIds.length === 0) return;
+    hapticSuccess();
     const today = new Date().toISOString().split('T')[0];
     const d = new Date();
     d.setMonth(d.getMonth() + 6);
@@ -107,6 +114,7 @@ export const EquipmentTable: React.FC<EquipmentTableProps> = ({
   // Perform full custom bulk update via modal
   const handleApplyModalUpdate = (data: BulkUpdateData) => {
     if (!onBulkUpdate || selectedIds.length === 0) return;
+    hapticSuccess();
     onBulkUpdate(selectedIds, data);
     showToast(`Bulk update applied to ${selectedIds.length} equipment items`);
   };

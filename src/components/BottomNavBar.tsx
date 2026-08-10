@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavTab } from '../types';
+import { hapticLight } from '../utils/haptics';
 
 interface BottomNavBarProps {
   currentTab: NavTab;
@@ -26,7 +27,10 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
         return (
           <button
             key={tab.id}
-            onClick={() => setCurrentTab(tab.id)}
+            onClick={() => {
+              hapticLight();
+              setCurrentTab(tab.id);
+            }}
             className="flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 px-1 group cursor-pointer transition-transform active:scale-95"
             aria-label={`Navigate to ${tab.label}`}
           >

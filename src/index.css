@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --font-headline: "Noto Serif", serif;
@@ -13,9 +15,175 @@
     -moz-osx-font-smoothing: grayscale;
     background-color: #f7f9ff;
     color: #001d32;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
+/* ==========================================
+   COMPREHENSIVE DARK MODE OVERRIDES & STYLES
+   ========================================== */
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #0b132b !important;
+  color: #f8fafc !important;
+}
+
+/* Header, Sidebar, Navbars, Toasts */
+html.dark header,
+html.dark aside,
+html.dark nav {
+  background-color: #0f1833 !important;
+  border-color: #23345d !important;
+  color: #f8fafc !important;
+}
+
+/* Main background & container overrides */
+html.dark .bg-white {
+  background-color: #131e3d !important;
+  color: #f8fafc !important;
+}
+
+html.dark .bg-\[\#f7f9ff\] {
+  background-color: #0b132b !important;
+}
+
+html.dark .bg-\[\#edf4ff\],
+html.dark .bg-\[\#edf4ff\]\/60,
+html.dark .bg-\[\#edf4ff\]\/80,
+html.dark .bg-\[\#edf4ff\]\/50 {
+  background-color: #1a2850 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .bg-\[\#d8eaff\],
+html.dark .bg-\[\#d8eaff\]\/50,
+html.dark .bg-\[\#d8eaff\]\/60 {
+  background-color: #203362 !important;
+  color: #93c5fd !important;
+}
+
+html.dark .bg-\[\#001d32\]\/60 {
+  background-color: rgba(3, 7, 18, 0.8) !important;
+}
+
+/* Text Readability Overrides in Dark Mode */
+html.dark .text-\[\#001d32\] {
+  color: #f8fafc !important;
+}
+
+html.dark .text-\[\#434653\],
+html.dark .text-\[\#1b1b1f\],
+html.dark .text-slate-600,
+html.dark .text-gray-600,
+html.dark .text-gray-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-\[\#094cb2\] {
+  color: #60a5fa !important;
+}
+
+html.dark .hover\:text-\[\#001d32\]:hover {
+  color: #ffffff !important;
+}
+
+html.dark .placeholder-\[\#434653\]::placeholder,
+html.dark ::placeholder {
+  color: #64748b !important;
+}
+
+/* Borders in Dark Mode */
+html.dark .border-\[\#c3c6d5\],
+html.dark .border-\[\#c3c6d5\]\/20,
+html.dark .border-\[\#c3c6d5\]\/30,
+html.dark .border-\[\#c3c6d5\]\/40,
+html.dark .border-\[\#c3c6d5\]\/50,
+html.dark .border-\[\#094cb2\]\/20,
+html.dark .border-\[\#094cb2\]\/15 {
+  border-color: #23345d !important;
+}
+
+html.dark .ghost-border {
+  border: 1px solid #23345d !important;
+}
+
+/* Modals, Dialogs, Cards & Drawers */
+html.dark article,
+html.dark [role="dialog"],
+html.dark .fixed .bg-white,
+html.dark .fixed .bg-[#edf4ff] {
+  background-color: #131e3d !important;
+  border-color: #23345d !important;
+  color: #f8fafc !important;
+}
+
+/* Form Inputs, Selects, Textareas in Dark Mode */
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark select,
+html.dark textarea {
+  background-color: #0b132b !important;
+  color: #f8fafc !important;
+  border-color: #23345d !important;
+}
+
+html.dark select option {
+  background-color: #0f1833 !important;
+  color: #f8fafc !important;
+}
+
+/* Tables in Dark Mode */
+html.dark table {
+  color: #f8fafc !important;
+}
+
+html.dark th {
+  background-color: #162449 !important;
+  color: #93c5fd !important;
+  border-color: #23345d !important;
+}
+
+html.dark td {
+  border-color: #23345d !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark tbody tr:hover {
+  background-color: #1a2850 !important;
+}
+
+/* Status Badges high-contrast in Dark Mode */
+html.dark .bg-\[\#dcfce7\] {
+  background-color: #064e3b !important;
+  color: #a7f3d0 !important;
+}
+
+html.dark .text-\[\#15803d\] {
+  color: #a7f3d0 !important;
+}
+
+html.dark .bg-\[\#fef3c7\] {
+  background-color: #78350f !important;
+  color: #fde68a !important;
+}
+
+html.dark .text-\[\#b45309\] {
+  color: #fde68a !important;
+}
+
+html.dark .bg-\[\#ffdad6\] {
+  background-color: #7f1d1d !important;
+  color: #fca5a5 !important;
+}
+
+html.dark .text-\[\#ba1a1a\] {
+  color: #fca5a5 !important;
+}
+
+/* Utility font classes */
 .font-headline {
   font-family: var(--font-headline);
 }
@@ -53,4 +221,5 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 

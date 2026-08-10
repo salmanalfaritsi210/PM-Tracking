@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavTab, ViewMode } from '../types';
 import logoImg from '../assets/images/instrumentation_logo_1786301198901.jpg';
+import { hapticLight, hapticMedium } from '../utils/haptics';
 
 interface HeaderProps {
   currentTab: NavTab;
@@ -12,6 +13,7 @@ interface HeaderProps {
   onOpenMobileSidebar: () => void;
   onOpenUpdateModal: () => void;
   onOpenReportModal: () => void;
+  onOpenSettings?: () => void;
   unreadCount?: number;
 }
 
@@ -25,6 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenMobileSidebar,
   onOpenUpdateModal,
   onOpenReportModal,
+  onOpenSettings,
   unreadCount = 2,
 }) => {
   return (
@@ -81,7 +84,10 @@ export const Header: React.FC<HeaderProps> = ({
         {/* View Mode Switcher (Grid vs Table) */}
         <div className="hidden sm:flex items-center bg-[#edf4ff] p-0.5 rounded-lg border border-[#c3c6d5]/30">
           <button
-            onClick={() => setViewMode('grid')}
+            onClick={() => {
+              hapticLight();
+              setViewMode('grid');
+            }}
             className={`p-1.5 rounded-md transition-all cursor-pointer flex items-center justify-center ${
               viewMode === 'grid' ? 'bg-white text-[#094cb2] shadow-xs' : 'text-[#434653] hover:text-[#001d32]'
             }`}
@@ -90,7 +96,10 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="material-symbols-outlined text-lg">grid_view</span>
           </button>
           <button
-            onClick={() => setViewMode('table')}
+            onClick={() => {
+              hapticLight();
+              setViewMode('table');
+            }}
             className={`p-1.5 rounded-md transition-all cursor-pointer flex items-center justify-center ${
               viewMode === 'table' ? 'bg-white text-[#094cb2] shadow-xs' : 'text-[#434653] hover:text-[#001d32]'
             }`}
@@ -102,12 +111,30 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Generate Report Button */}
         <button
-          onClick={onOpenReportModal}
+          onClick={() => {
+            hapticMedium();
+            onOpenReportModal();
+          }}
           className="hidden md:flex items-center gap-1.5 bg-[#094cb2] hover:bg-[#3366cc] text-white px-3.5 py-1.5 rounded-full font-label text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
         >
           <span className="material-symbols-outlined text-sm">summarize</span>
           <span>Generate Report</span>
         </button>
+
+        {/* Settings Button */}
+        {onOpenSettings && (
+          <button
+            onClick={() => {
+              hapticMedium();
+              onOpenSettings();
+            }}
+            className="p-2 rounded-full bg-[#edf4ff] hover:bg-[#d8eaff] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#094cb2] dark:text-blue-400 border border-[#094cb2]/20 dark:border-slate-700 transition-colors cursor-pointer flex items-center justify-center shadow-xs shrink-0"
+            title="Settings"
+            aria-label="Settings"
+          >
+            <span className="material-symbols-outlined text-lg">settings</span>
+          </button>
+        )}
 
 
       </div>

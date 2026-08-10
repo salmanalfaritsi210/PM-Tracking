@@ -1,5 +1,6 @@
 import React from 'react';
-import { FilterState } from '../types';
+import { FilterState, AreaCustomizationMap, Area, DEFAULT_AREA_CUSTOMIZATION } from '../types';
+import { hapticLight, hapticMedium } from '../utils/haptics';
 
 interface FilterBarProps {
   filters: FilterState;
@@ -7,6 +8,8 @@ interface FilterBarProps {
   onOpenUpdateModal: () => void;
   onClearFilters: () => void;
   totalFilteredCount?: number;
+  areaCustomization?: AreaCustomizationMap;
+  onOpenManageCustomization?: (area?: Area) => void;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -15,10 +18,42 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onOpenUpdateModal,
   onClearFilters,
   totalFilteredCount,
+  areaCustomization = DEFAULT_AREA_CUSTOMIZATION,
+  onOpenManageCustomization,
 }) => {
   const handleSelectChange = (field: keyof FilterState, value: string) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+    hapticLight();
+    setFilters((prev) => {
+      if (field === 'area' && value !== 'All' && value in areaCustomization) {
+        return {
+          ...prev,
+          area: value,
+          line: 'All', // Reset line when switching area to ensure synchronization
+        };
+      }
+      return { ...prev, [field]: value };
+    });
   };
+
+  // Derive available lines based on selected area
+  const availableLines = React.useMemo(() => {
+    if (filters.area !== 'All' && filters.area in areaCustomization) {
+      return areaCustomization[filters.area as Area]?.lines || [];
+    }
+    // Aggregate unique lines across all areas
+    const allLines = Object.values(areaCustomization).flatMap((ac) => ac.lines);
+    return Array.from(new Set(allLines));
+  }, [filters.area, areaCustomization]);
+
+  // Derive available PM Types based on selected area
+  const availablePmTypes = React.useMemo(() => {
+    if (filters.area !== 'All' && filters.area in areaCustomization) {
+      return areaCustomization[filters.area as Area]?.pmTypes || [];
+    }
+    // Aggregate unique PM types across all areas
+    const allPmTypes = Object.values(areaCustomization).flatMap((ac) => ac.pmTypes);
+    return Array.from(new Set(allPmTypes));
+  }, [filters.area, areaCustomization]);
 
   const isFiltered =
     filters.area !== 'All' ||
@@ -56,12 +91,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               className="w-full bg-[#edf4ff] border-none rounded-xl py-2 pl-3.5 pr-8 text-xs sm:text-sm font-label text-[#001d32] focus:ring-2 focus:ring-[#094cb2]/50 cursor-pointer shadow-2xs font-medium"
             >
               <option value="All">Line: All</option>
-              <option value="Line 1">Line 1</option>
-              <option value="Line 2">Line 2</option>
-              <option value="Line A">Line A</option>
-              <option value="Line B">Line B</option>
-              <option value="Line C">Line C</option>
-              <option value="Line D">Line D</option>
+              {availableLines.map((lineOption) => (
+                <option key={lineOption} value={lineOption}>
+                  {lineOption}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -73,10 +107,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               className="w-full bg-[#edf4ff] border-none rounded-xl py-2 pl-3.5 pr-8 text-xs sm:text-sm font-label text-[#001d32] focus:ring-2 focus:ring-[#094cb2]/50 cursor-pointer shadow-2xs font-medium"
             >
               <option value="All">Type: All</option>
-              <option value="Check Weigher Calibration">Check Weigher Calibration</option>
-              <option value="Net Weigher Calibration">Net Weigher Calibration</option>
-              <option value="Metal Detector Calibration">Metal Detector Calibration</option>
-              <option value="Routine PM">Routine PM</option>
+              {availablePmTypes.map((typeOption) => (
+                <option key={typeOption} value={typeOption}>
+                  {typeOption}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -123,10 +158,30 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             </select>
           </div>
 
+          {/* Manage Custom Lines & Types Button */}
+          {onOpenManageCustomization && (
+            <button
+              onClick={() => {
+                hapticMedium();
+                onOpenManageCustomization(
+                  filters.area !== 'All' ? (filters.area as Area) : 'North Logistics'
+                );
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#edf4ff] hover:bg-[#d8eaff] text-[#094cb2] text-xs sm:text-sm font-label font-bold transition-colors cursor-pointer shadow-2xs border border-[#094cb2]/20"
+              title="Customize Lines & PM Types"
+            >
+              <span className="material-symbols-outlined text-base">tune</span>
+              <span className="hidden sm:inline">Customize Lines & Types</span>
+            </button>
+          )}
+
           {/* Clear Button */}
           {isFiltered && (
             <button
-              onClick={onClearFilters}
+              onClick={() => {
+                hapticLight();
+                onClearFilters();
+              }}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#d8eaff] hover:bg-[#cde5ff] text-[#094cb2] text-xs sm:text-sm font-label font-bold transition-colors cursor-pointer shadow-2xs"
             >
               <span className="material-symbols-outlined text-base">filter_alt_off</span>
@@ -144,7 +199,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           )}
 
           <button
-            onClick={onOpenUpdateModal}
+            onClick={() => {
+              hapticMedium();
+              onOpenUpdateModal();
+            }}
             className="btn-primary font-label text-xs sm:text-sm font-bold py-2.5 px-4 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity shadow-xs cursor-pointer ml-auto sm:ml-0"
           >
             <span className="material-symbols-outlined text-lg">add_circle</span>

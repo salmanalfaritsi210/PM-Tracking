@@ -1,6 +1,7 @@
 import React from 'react';
 import { EquipmentItem } from '../types';
 import { calculateEquipmentHealthScore } from '../lib/healthScore';
+import { hapticLight, hapticMedium } from '../utils/haptics';
 
 interface EquipmentCardProps {
   item: EquipmentItem;
@@ -21,7 +22,10 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
 
   return (
     <article
-      onClick={() => onSelect(item)}
+      onClick={() => {
+        hapticLight();
+        onSelect(item);
+      }}
       className="bg-white rounded-2xl p-4 sm:p-5 ghost-border flex flex-col hover:bg-[#edf4ff]/60 active:scale-[0.98] transition-all duration-200 group relative overflow-hidden cursor-pointer shadow-2xs hover:shadow-md touch-manipulation"
     >
       {/* Overdue Red Left Accent Line */}
@@ -136,6 +140,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            hapticMedium();
             onQuickLog(item);
           }}
           className="flex-1 bg-[#d8eaff] hover:bg-[#094cb2] hover:text-white active:scale-95 text-[#094cb2] font-label font-bold text-xs sm:text-sm min-h-[44px] py-2.5 px-3 rounded-xl transition-all flex justify-center items-center gap-1.5 cursor-pointer shadow-2xs touch-manipulation"
@@ -148,6 +153,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
+              hapticMedium();
               onEdit(item);
             }}
             className="p-2.5 min-h-[44px] min-w-[44px] rounded-xl bg-[#edf4ff] hover:bg-[#094cb2] active:scale-95 text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold flex items-center justify-center cursor-pointer shadow-2xs touch-manipulation"

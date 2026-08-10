@@ -71,3 +71,41 @@ export type NavTab =
   | 'archives';
 
 export type ViewMode = 'grid' | 'table';
+
+export interface AreaCustomization {
+  lines: string[];
+  pmTypes: string[];
+}
+
+export type AreaCustomizationMap = Record<Area, AreaCustomization>;
+
+export const DEFAULT_AREA_CUSTOMIZATION: AreaCustomizationMap = {
+  'North Logistics': {
+    lines: ['Line 1', 'Line 2'],
+    pmTypes: [
+      'Check Weigher Calibration',
+      'Net Weigher Calibration',
+      'Metal Detector Calibration',
+      'Routine PM',
+    ],
+  },
+  'South Logistics': {
+    lines: ['Line A', 'Line B', 'Line C', 'Line D'],
+    pmTypes: [
+      'Check Weigher Calibration',
+      'Net Weigher Calibration',
+      'Metal Detector Calibration',
+      'Routine PM',
+    ],
+  },
+  'Dock Area': {
+    lines: ['Dock Bay 1', 'Dock Bay 2', 'Dock Leveler Area'],
+    pmTypes: [
+      'Check Weigher Calibration',
+      'Dock Leveler Safety Inspection',
+      'Scale Calibration',
+      'Routine PM',
+    ],
+  },
+};
+
