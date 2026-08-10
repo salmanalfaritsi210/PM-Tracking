@@ -143,17 +143,6 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        {/* Notifications Icon */}
-        <button
-          className="relative text-[#434653] hover:text-[#094cb2] transition-colors p-1.5 rounded-full hover:bg-[#edf4ff] cursor-pointer"
-          title="Notifications"
-        >
-          <span className="material-symbols-outlined text-xl">notifications</span>
-          {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#ba1a1a] ring-2 ring-white animate-pulse" />
-          )}
-        </button>
-
         {/* Generate Report Button */}
         <button
           onClick={onOpenReportModal}
@@ -161,15 +150,6 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <span className="material-symbols-outlined text-sm">summarize</span>
           <span>Generate Report</span>
-        </button>
-
-        {/* Mobile Quick Action button */}
-        <button
-          onClick={onOpenUpdateModal}
-          className="sm:hidden bg-[#094cb2] text-white p-1.5 rounded-full hover:bg-[#3366cc] cursor-pointer"
-          title="Update PM Log"
-        >
-          <span className="material-symbols-outlined text-lg">add</span>
         </button>
 
 

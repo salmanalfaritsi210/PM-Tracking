@@ -148,6 +148,33 @@
   - `src/components/BottomNavBar.tsx`: Removed the 5th "More" menu button.
 - **Verification**: Verified linter and applet build compilation.
 
+---
+
+### [2026-08-10 11:21 UTC] - Milestone 20: Offline Network Listener & Firestore Sync Toast
+- **Task**: Implemented network listener to monitor connection status and notify users via a subtle toast when offline and when connection resumes.
+- **Files & Components Updated**:
+  - `src/components/OfflineToast.tsx`: Created new toast component listening to `window.addEventListener('offline')` and `window.addEventListener('online')` events.
+  - `src/App.tsx`: Integrated `<OfflineToast />` at app level.
+- **Verification**: Verified linter and applet build compilation.
+
+---
+
+### [2026-08-10 11:23 UTC] - Milestone 21: Selected Buttons Removal
+- **Task**: Removed the mobile floating action button (`MobileFab.tsx` / `div#root > div > button`) and header notifications & mobile action buttons as requested via focus selection.
+- **Files & Components Updated**:
+  - `src/App.tsx`: Removed `<MobileFab />` component call and import.
+  - `src/components/Header.tsx`: Removed notification icon button and mobile quick update button from header controls.
+- **Verification**: Verified linter and applet build compilation.
+
+---
+
+### [2026-08-10 11:25 UTC] - Milestone 22: Home Menu Overdue and Due Soon Data Logs Cards
+- **Task**: Updated the Home tab (`dashboard` view) to render full equipment card grids for both **Overdue PM Logs** and **Due Soon PM Logs** in full English.
+- **Files & Components Updated**:
+  - `src/App.tsx`: Added dedicated `Overdue PM Logs` card grid section and `Due Soon PM Logs` card grid section to Home menu dashboard layout.
+- **Verification**: Verified linter and applet build compilation.
+
+
 
 
 

@@ -27,7 +27,7 @@ import { HistoryLogsView } from './components/HistoryLogsView';
 import { UpdateLogModal } from './components/UpdateLogModal';
 import { ReportModal } from './components/ReportModal';
 import { BottomNavBar } from './components/BottomNavBar';
-import { MobileFab } from './components/MobileFab';
+import { OfflineToast } from './components/OfflineToast';
 
 export default function App() {
   // Sync with Firestore real-time subscription
@@ -188,7 +188,7 @@ export default function App() {
     return filteredEquipment.filter((item) => item.area === 'Dock Area');
   }, [filteredEquipment]);
 
-  // Dedicated lists for Home / Dashboard view focusing on Due Soon
+  // Dedicated lists for Home / Dashboard view focusing on Due Soon & Overdue
   const dueSoonEquipment = useMemo(() => {
     return filteredEquipment
       .filter((item) => item.status === 'Due Soon' || (item.status === 'OK' && new Date(item.nextDueDate).getTime() - Date.now() <= 30 * 86400000 && item.status !== 'Overdue'))
@@ -196,8 +196,10 @@ export default function App() {
   }, [filteredEquipment]);
 
   const overdueEquipment = useMemo(() => {
-    return equipmentList.filter((item) => item.status === 'Overdue');
-  }, [equipmentList]);
+    return filteredEquipment
+      .filter((item) => item.status === 'Overdue')
+      .sort((a, b) => new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime());
+  }, [filteredEquipment]);
 
   // Handlers
   const handleOpenUpdateModal = (item?: EquipmentItem | null) => {
@@ -491,49 +493,60 @@ export default function App() {
           ) : (
             /* DISPLAY MODE 2: GRID CARDS VIEW (GROUPED BY LOCATION & DASHBOARD FOCUS) */
             <div className="space-y-10">
-              {/* HOME DASHBOARD SPECIAL VIEW: ACTION REQUIRED & DUE SOON PMS */}
+              {/* HOME DASHBOARD SPECIAL VIEW: OVERDUE & DUE SOON PM DATA LOGS */}
               {currentTab === 'dashboard' && (
-                <>
-                  {/* Minimal Overdue Alert Banner */}
-                  {overdueEquipment.length > 0 && (
-                    <div className="bg-[#fff2f2] border border-[#ba1a1a]/20 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm font-semibold text-[#ba1a1a] shadow-2xs">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-base">warning</span>
-                        <span>Minimal Overdue Summary: <strong>{overdueEquipment.length} Overdue Units</strong></span>
-                        <span className="hidden md:inline font-normal text-xs text-[#ba1a1a]/80">
-                          • ({overdueEquipment.map((e) => e.code).join(', ')})
-                        </span>
-                      </div>
-                      <button
-                        onClick={() =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            dateRange: prev.dateRange === 'Overdue' ? 'All' : 'Overdue',
-                          }))
-                        }
-                        className="text-xs font-bold underline cursor-pointer hover:no-underline"
-                      >
-                        {filters.dateRange === 'Overdue' ? 'Reset Filter' : 'Filter Overdue'}
-                      </button>
+                <div className="space-y-8">
+                  {/* OVERDUE PM LOGS SECTION */}
+                  <section className="bg-[#fff2f2]/60 p-4 sm:p-6 rounded-2xl border border-[#ba1a1a]/25">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-2 border-b border-[#ba1a1a]/20">
+                      <h3 className="font-headline text-lg sm:text-xl text-[#ba1a1a] font-bold flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[#ba1a1a] fill-1">warning</span>
+                        <span>Overdue PM Logs</span>
+                      </h3>
+                      <span className="text-xs font-label font-bold text-[#ba1a1a] bg-[#ffdad6] px-3 py-1 rounded-full self-start sm:self-auto">
+                        {overdueEquipment.length} Overdue Units
+                      </span>
                     </div>
-                  )}
 
-                  {/* PRIMARY HOME FOCUS: ACTION REQUIRED & DUE SOON PMS ONLY */}
-                  <section className="bg-[#edf4ff]/40 p-4 sm:p-6 rounded-2xl border border-[#094cb2]/15">
+                    {overdueEquipment.length === 0 ? (
+                      <div className="bg-white/80 rounded-xl p-5 border border-[#ba1a1a]/15 text-center text-[#434653]">
+                        <p className="font-label text-sm font-medium text-emerald-700 flex items-center justify-center gap-1.5">
+                          <span className="material-symbols-outlined text-base">check_circle</span>
+                          <span>No overdue PM schedules. All equipment maintenance is currently up to date!</span>
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+                        {overdueEquipment.map((item) => (
+                          <EquipmentCard
+                            key={item.id}
+                            item={item}
+                            onSelect={(item) => setSelectedDrawerItem(item)}
+                            onQuickLog={(item) => setSelectedDrawerItem(item)}
+                            onEdit={(item) => handleOpenUpdateModal(item)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </section>
+
+                  {/* DUE SOON PM LOGS SECTION */}
+                  <section className="bg-[#edf4ff]/50 p-4 sm:p-6 rounded-2xl border border-[#094cb2]/20">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-2 border-b border-[#094cb2]/15">
                       <h3 className="font-headline text-lg sm:text-xl text-[#001d32] font-bold flex items-center gap-2">
-                        <span className="material-symbols-outlined text-[#094cb2] fill-1">alarm</span>
-                        <span>Action Required PMs (Due Soon)</span>
+                        <span className="material-symbols-outlined text-[#094cb2] fill-1">schedule</span>
+                        <span>Due Soon PM Logs</span>
                       </h3>
                       <span className="text-xs font-label font-bold text-[#094cb2] bg-[#d8eaff] px-3 py-1 rounded-full self-start sm:self-auto">
-                        {dueSoonEquipment.length} PMs Require Immediate Action
+                        {dueSoonEquipment.length} PMs Due Soon
                       </span>
                     </div>
 
                     {dueSoonEquipment.length === 0 ? (
-                      <div className="bg-white rounded-2xl p-6 ghost-border text-center text-[#434653]">
-                        <p className="font-label text-sm font-medium">
-                          ✓ No PM schedules currently require immediate action. All equipment is up to date.
+                      <div className="bg-white/80 rounded-xl p-5 border border-[#094cb2]/15 text-center text-[#434653]">
+                        <p className="font-label text-sm font-medium text-slate-600 flex items-center justify-center gap-1.5">
+                          <span className="material-symbols-outlined text-base">event_available</span>
+                          <span>No upcoming PM schedules due soon in the near future.</span>
                         </p>
                       </div>
                     ) : (
@@ -550,7 +563,7 @@ export default function App() {
                       </div>
                     )}
                   </section>
-                </>
+                </div>
               )}
 
               {/* NORTH LOGISTICS SECTION */}
@@ -681,11 +694,8 @@ export default function App() {
         equipment={equipmentList}
       />
 
-      {/* Floating Action Button (FAB) for Mobile Primary Action */}
-      <MobileFab
-        onOpenUpdateModal={() => handleOpenUpdateModal(null)}
-        label="Log PM"
-      />
+      {/* Network Online/Offline Status Notification Toast */}
+      <OfflineToast />
 
       {/* Bottom Navigation Bar for Mobile Navigation */}
       <BottomNavBar
