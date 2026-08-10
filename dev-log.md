@@ -174,6 +174,14 @@
   - `src/App.tsx`: Added dedicated `Overdue PM Logs` card grid section and `Due Soon PM Logs` card grid section to Home menu dashboard layout.
 - **Verification**: Verified linter and applet build compilation.
 
+---
+
+### [2026-08-10 11:29 UTC] - Milestone 23: Header Navigation Buttons Removal
+- **Task**: Removed the top header navigation tabs (Dashboard, Equipment Matrix, Schedules, Archives) as requested via UI element selection.
+- **Files & Components Updated**:
+  - `src/components/Header.tsx`: Removed header `<nav>` element containing the navigation buttons.
+- **Verification**: Verified linter and applet build compilation.
+
 
 
 

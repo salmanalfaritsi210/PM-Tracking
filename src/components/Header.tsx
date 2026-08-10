@@ -52,49 +52,6 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Top Header Navigation Tabs (Desktop) */}
-        <nav className="hidden lg:flex items-center gap-6 ml-4">
-          <button
-            onClick={() => setCurrentTab('dashboard')}
-            className={`font-body text-sm font-semibold transition-colors duration-200 cursor-pointer py-1.5 border-b-2 ${
-              currentTab === 'dashboard'
-                ? 'text-[#094cb2] border-[#094cb2]'
-                : 'text-[#434653] border-transparent hover:text-[#094cb2]'
-            }`}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => setCurrentTab('equipment')}
-            className={`font-body text-sm font-semibold transition-colors duration-200 cursor-pointer py-1.5 border-b-2 ${
-              currentTab === 'equipment'
-                ? 'text-[#094cb2] border-[#094cb2]'
-                : 'text-[#434653] border-transparent hover:text-[#094cb2]'
-            }`}
-          >
-            Equipment Matrix
-          </button>
-          <button
-            onClick={() => setCurrentTab('schedules')}
-            className={`font-body text-sm font-semibold transition-colors duration-200 cursor-pointer py-1.5 border-b-2 ${
-              currentTab === 'schedules'
-                ? 'text-[#094cb2] border-[#094cb2]'
-                : 'text-[#434653] border-transparent hover:text-[#094cb2]'
-            }`}
-          >
-            Schedules
-          </button>
-          <button
-            onClick={() => setCurrentTab('archives')}
-            className={`font-body text-sm font-semibold transition-colors duration-200 cursor-pointer py-1.5 border-b-2 ${
-              currentTab === 'archives'
-                ? 'text-[#094cb2] border-[#094cb2]'
-                : 'text-[#434653] border-transparent hover:text-[#094cb2]'
-            }`}
-          >
-            Archives
-          </button>
-        </nav>
       </div>
 
       {/* Right Controls: Search, View Mode Toggle, Report, Profile */}
