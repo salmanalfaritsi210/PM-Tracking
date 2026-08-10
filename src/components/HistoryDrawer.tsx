@@ -98,10 +98,13 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
         className="fixed inset-0 bg-[#001d32]/30 backdrop-blur-xs z-40 transition-opacity animate-in fade-in duration-300"
       />
 
-      {/* Drawer Container */}
-      <aside className="fixed top-0 right-0 h-screen w-full sm:w-[520px] bg-white shadow-2xl z-50 flex flex-col border-l border-[#c3c6d5]/20 animate-in slide-in-from-right duration-300">
+      {/* Drawer Container (Mobile Bottom Sheet & Desktop Right Drawer) */}
+      <aside className="fixed bottom-0 right-0 left-0 sm:left-auto sm:top-0 h-[88vh] sm:h-screen sm:max-h-none w-full sm:w-[520px] bg-white rounded-t-3xl sm:rounded-none shadow-2xl z-50 flex flex-col border-t sm:border-t-0 sm:border-l border-[#c3c6d5]/20 animate-in slide-in-from-bottom sm:slide-in-from-right duration-300">
+        {/* Mobile Drag Handle */}
+        <div className="w-12 h-1.5 bg-[#c3c6d5]/70 rounded-full mx-auto my-2.5 sm:hidden shrink-0 cursor-pointer" onClick={onClose} />
+
         {/* Drawer Header */}
-        <div className="px-6 sm:px-8 py-6 bg-white z-10 flex flex-col shrink-0 border-b border-[#edf4ff]">
+        <div className="px-5 sm:px-8 py-4 sm:py-6 bg-white z-10 flex flex-col shrink-0 border-b border-[#edf4ff]">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[#e2efff] flex items-center justify-center text-[#094cb2] shadow-2xs">

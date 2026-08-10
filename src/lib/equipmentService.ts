@@ -9,6 +9,7 @@ import {
 import { db, handleFirestoreError, OperationType } from './firebase';
 import { EquipmentItem, MaintenanceHistoryEntry } from '../types';
 import { INITIAL_EQUIPMENT } from '../data/initialData';
+import { syncEquipmentWithRealtimeDate } from './dateUtils';
 
 const COLLECTION_NAME = 'equipment';
 
@@ -28,7 +29,8 @@ export function subscribeEquipment(
       if (snapshot.empty) {
         // Seed initial data if Firestore is currently empty
         try {
-          for (const item of INITIAL_EQUIPMENT) {
+          for (const rawItem of INITIAL_EQUIPMENT) {
+            const item = syncEquipmentWithRealtimeDate(rawItem);
             await setDoc(doc(db, COLLECTION_NAME, item.id), item);
           }
         } catch (err) {
@@ -38,9 +40,33 @@ export function subscribeEquipment(
       }
 
       const items: EquipmentItem[] = [];
+      const outOfSyncUpdates: { id: string; status: string; daysAgoText: string }[] = [];
+
       snapshot.forEach((docSnap) => {
-        items.push(docSnap.data() as EquipmentItem);
+        const rawItem = docSnap.data() as EquipmentItem;
+        const syncedItem = syncEquipmentWithRealtimeDate(rawItem);
+        
+        if (syncedItem.status !== rawItem.status || syncedItem.daysAgoText !== rawItem.daysAgoText) {
+          outOfSyncUpdates.push({
+            id: syncedItem.id,
+            status: syncedItem.status,
+            daysAgoText: syncedItem.daysAgoText,
+          });
+        }
+        items.push(syncedItem);
       });
+
+      // Asynchronously update any items in Firestore that had outdated statuses
+      if (outOfSyncUpdates.length > 0) {
+        for (const update of outOfSyncUpdates) {
+          updateDoc(doc(db, COLLECTION_NAME, update.id), {
+            status: update.status,
+            daysAgoText: update.daysAgoText,
+          }).catch((err) => {
+            console.warn('Auto-sync status failed for item:', update.id, err);
+          });
+        }
+      }
 
       onUpdate(items);
     },

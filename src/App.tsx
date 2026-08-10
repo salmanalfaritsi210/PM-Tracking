@@ -8,6 +8,7 @@ import {
   deleteHistoryEntryFromFirestore,
   clearAllLogsInFirestore,
 } from './lib/equipmentService';
+import { calculateRealtimeStatus } from './lib/dateUtils';
 import {
   EquipmentItem,
   FilterState,
@@ -25,6 +26,8 @@ import { HistoryDrawer } from './components/HistoryDrawer';
 import { HistoryLogsView } from './components/HistoryLogsView';
 import { UpdateLogModal } from './components/UpdateLogModal';
 import { ReportModal } from './components/ReportModal';
+import { BottomNavBar } from './components/BottomNavBar';
+import { MobileFab } from './components/MobileFab';
 
 export default function App() {
   // Sync with Firestore real-time subscription
@@ -38,7 +41,28 @@ export default function App() {
   }, []);
 
   // Navigation & View State
-  const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
+  const [currentTab, setCurrentTab] = useState<NavTab>(() => {
+    const saved = localStorage.getItem('pm_tracking_active_tab');
+    const validTabs: NavTab[] = [
+      'dashboard',
+      'north',
+      'south',
+      'dock',
+      'history',
+      'equipment',
+      'schedules',
+      'archives',
+    ];
+    if (saved && validTabs.includes(saved as NavTab)) {
+      return saved as NavTab;
+    }
+    return 'dashboard';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pm_tracking_active_tab', currentTab);
+  }, [currentTab]);
+
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -164,6 +188,17 @@ export default function App() {
     return filteredEquipment.filter((item) => item.area === 'Dock Area');
   }, [filteredEquipment]);
 
+  // Dedicated lists for Home / Dashboard view focusing on Due Soon
+  const dueSoonEquipment = useMemo(() => {
+    return filteredEquipment
+      .filter((item) => item.status === 'Due Soon' || (item.status === 'OK' && new Date(item.nextDueDate).getTime() - Date.now() <= 30 * 86400000 && item.status !== 'Overdue'))
+      .sort((a, b) => new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime());
+  }, [filteredEquipment]);
+
+  const overdueEquipment = useMemo(() => {
+    return equipmentList.filter((item) => item.status === 'Overdue');
+  }, [equipmentList]);
+
   // Handlers
   const handleOpenUpdateModal = (item?: EquipmentItem | null) => {
     setSelectedModalItem(item || null);
@@ -199,6 +234,11 @@ export default function App() {
       technicianNotes: `Preventive Maintenance inspection executed. WO: ${logData.workOrder}, PTW: ${logData.ptwNo}. Next due set to ${logData.nextDueDate}.`,
     };
 
+    const { status: realStatus, daysAgoText: realDaysAgo } = calculateRealtimeStatus(
+      logData.nextDueDate,
+      logData.lastPmDate
+    );
+
     if (selectedModalItem) {
       // Update existing item in Firestore
       const updatedFields: Partial<EquipmentItem> = {
@@ -212,10 +252,10 @@ export default function App() {
         line: logData.line,
         pmType: logData.pmType,
         lastPmDate: logData.lastPmDate,
-        daysAgoText: '- Just updated',
+        daysAgoText: realDaysAgo,
         nextDueDate: logData.nextDueDate,
         frequencyMonths: logData.frequencyMonths,
-        status: logData.isCompleted ? 'OK' : 'Due Soon',
+        status: logData.isCompleted ? realStatus : 'Due Soon',
         history: [newHistoryEntry, ...(selectedModalItem.history || [])],
       };
       updateEquipmentInFirestore(selectedModalItem.id, updatedFields);
@@ -230,13 +270,13 @@ export default function App() {
         line: logData.line,
         pmType: logData.pmType,
         lastPmDate: logData.lastPmDate,
-        daysAgoText: '- Just created',
+        daysAgoText: realDaysAgo,
         lastWoPtw: `${logData.workOrder} / ${logData.ptwNo}`,
         workOrder: logData.workOrder,
         ptwNo: logData.ptwNo,
         nextDueDate: logData.nextDueDate,
         frequencyMonths: logData.frequencyMonths,
-        status: logData.isCompleted ? 'OK' : 'Due Soon',
+        status: logData.isCompleted ? realStatus : 'Due Soon',
         history: [newHistoryEntry],
       };
       addEquipmentToFirestore(newUnit);
@@ -320,9 +360,23 @@ export default function App() {
     });
   };
 
+  // Pull-to-refresh simulation state
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshToast, setRefreshToast] = useState(false);
+
+  const handlePullToRefresh = () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setRefreshToast(true);
+      setTimeout(() => setRefreshToast(false), 3000);
+    }, 700);
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f9ff] text-[#001d32] font-body flex flex-col md:flex-row antialiased selection:bg-[#cde5ff]">
-      {/* Side Navigation Bar */}
+      {/* Side Navigation Bar (Desktop & Mobile Drawer) */}
       <Sidebar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
@@ -349,8 +403,27 @@ export default function App() {
           onOpenReportModal={() => setIsReportModalOpen(true)}
         />
 
-        {/* Dashboard Content Container */}
-        <div className="p-4 sm:p-8 max-w-7xl mx-auto w-full flex-grow">
+        {/* Mobile Pull-to-refresh Banner */}
+        <div className="md:hidden px-4 pt-2 flex justify-between items-center text-xs font-label text-[#434653]">
+          <button
+            onClick={handlePullToRefresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 active:scale-95 transition-all border border-[#c3c6d5]/30 cursor-pointer text-[#094cb2] font-semibold"
+          >
+            <span className={`material-symbols-outlined text-sm ${isRefreshing ? 'animate-spin' : ''}`}>
+              sync
+            </span>
+            <span>{isRefreshing ? 'Refreshing data...' : 'Pull to Refresh'}</span>
+          </button>
+          {refreshToast && (
+            <span className="text-[11px] font-bold text-[#094cb2] bg-[#d8eaff] px-2.5 py-1 rounded-full animate-in fade-in duration-200">
+              ✓ Data up to date
+            </span>
+          )}
+        </div>
+
+        {/* Dashboard Content Container with PB-28 for Mobile Bottom Nav */}
+        <div className="p-4 sm:p-8 pb-28 sm:pb-8 max-w-7xl mx-auto w-full flex-grow">
           {/* Page Heading Title */}
           <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
@@ -416,10 +489,72 @@ export default function App() {
               onBulkUpdate={handleBulkUpdate}
             />
           ) : (
-            /* DISPLAY MODE 2: GRID CARDS VIEW (GROUPED BY LOCATION) */
+            /* DISPLAY MODE 2: GRID CARDS VIEW (GROUPED BY LOCATION & DASHBOARD FOCUS) */
             <div className="space-y-10">
+              {/* HOME DASHBOARD SPECIAL VIEW: ACTION REQUIRED & DUE SOON PMS */}
+              {currentTab === 'dashboard' && (
+                <>
+                  {/* Minimal Overdue Alert Banner */}
+                  {overdueEquipment.length > 0 && (
+                    <div className="bg-[#fff2f2] border border-[#ba1a1a]/20 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm font-semibold text-[#ba1a1a] shadow-2xs">
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-base">warning</span>
+                        <span>Minimal Overdue Summary: <strong>{overdueEquipment.length} Overdue Units</strong></span>
+                        <span className="hidden md:inline font-normal text-xs text-[#ba1a1a]/80">
+                          • ({overdueEquipment.map((e) => e.code).join(', ')})
+                        </span>
+                      </div>
+                      <button
+                        onClick={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            dateRange: prev.dateRange === 'Overdue' ? 'All' : 'Overdue',
+                          }))
+                        }
+                        className="text-xs font-bold underline cursor-pointer hover:no-underline"
+                      >
+                        {filters.dateRange === 'Overdue' ? 'Reset Filter' : 'Filter Overdue'}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* PRIMARY HOME FOCUS: ACTION REQUIRED & DUE SOON PMS ONLY */}
+                  <section className="bg-[#edf4ff]/40 p-4 sm:p-6 rounded-2xl border border-[#094cb2]/15">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-2 border-b border-[#094cb2]/15">
+                      <h3 className="font-headline text-lg sm:text-xl text-[#001d32] font-bold flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[#094cb2] fill-1">alarm</span>
+                        <span>Action Required PMs (Due Soon)</span>
+                      </h3>
+                      <span className="text-xs font-label font-bold text-[#094cb2] bg-[#d8eaff] px-3 py-1 rounded-full self-start sm:self-auto">
+                        {dueSoonEquipment.length} PMs Require Immediate Action
+                      </span>
+                    </div>
+
+                    {dueSoonEquipment.length === 0 ? (
+                      <div className="bg-white rounded-2xl p-6 ghost-border text-center text-[#434653]">
+                        <p className="font-label text-sm font-medium">
+                          ✓ No PM schedules currently require immediate action. All equipment is up to date.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+                        {dueSoonEquipment.map((item) => (
+                          <EquipmentCard
+                            key={item.id}
+                            item={item}
+                            onSelect={(item) => setSelectedDrawerItem(item)}
+                            onQuickLog={(item) => setSelectedDrawerItem(item)}
+                            onEdit={(item) => handleOpenUpdateModal(item)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </section>
+                </>
+              )}
+
               {/* NORTH LOGISTICS SECTION */}
-              {(currentTab === 'dashboard' || currentTab === 'north') && (
+              {currentTab === 'north' && (
                 <section>
                   <h3 className="font-headline text-lg sm:text-xl text-[#001d32] mb-5 flex items-center gap-2 border-b-2 border-[#d8eaff] pb-2 inline-flex">
                     <span className="material-symbols-outlined text-[#094cb2]">location_on</span>
@@ -450,7 +585,7 @@ export default function App() {
               )}
 
               {/* SOUTH LOGISTICS SECTION */}
-              {(currentTab === 'dashboard' || currentTab === 'south') && (
+              {currentTab === 'south' && (
                 <section>
                   <h3 className="font-headline text-lg sm:text-xl text-[#001d32] mb-5 flex items-center gap-2 border-b-2 border-[#d8eaff] pb-2 inline-flex">
                     <span className="material-symbols-outlined text-[#094cb2]">location_on</span>
@@ -481,7 +616,7 @@ export default function App() {
               )}
 
               {/* DOCK AREA SECTION */}
-              {(currentTab === 'dashboard' || currentTab === 'dock') && (
+              {currentTab === 'dock' && (
                 <section>
                   <h3 className="font-headline text-lg sm:text-xl text-[#001d32] mb-5 flex items-center gap-2 border-b-2 border-[#d8eaff] pb-2 inline-flex">
                     <span className="material-symbols-outlined text-[#094cb2]">precision_manufacturing</span>
@@ -544,6 +679,19 @@ export default function App() {
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
         equipment={equipmentList}
+      />
+
+      {/* Floating Action Button (FAB) for Mobile Primary Action */}
+      <MobileFab
+        onOpenUpdateModal={() => handleOpenUpdateModal(null)}
+        label="Log PM"
+      />
+
+      {/* Bottom Navigation Bar for Mobile Navigation */}
+      <BottomNavBar
+        currentTab={currentTab}
+        setCurrentTab={setCurrentTab}
+        onOpenMobileMenu={() => setIsMobileSidebarOpen(true)}
       />
     </div>
   );

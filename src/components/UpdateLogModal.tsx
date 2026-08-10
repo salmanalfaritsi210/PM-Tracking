@@ -147,13 +147,16 @@ export const UpdateLogModal: React.FC<UpdateLogModalProps> = ({
       />
 
       {/* Modal Container */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-y-auto">
         <div
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-[#c3c6d5]/30 flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
+          className="relative w-full max-w-2xl bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden border border-[#c3c6d5]/30 flex flex-col max-h-[92vh] sm:max-h-[90vh] animate-in slide-in-from-bottom sm:zoom-in-95 duration-200"
         >
+          {/* Mobile Drag Handle */}
+          <div className="w-12 h-1.5 bg-[#c3c6d5]/70 rounded-full mx-auto my-2.5 sm:hidden shrink-0 cursor-pointer" onClick={onClose} />
+
           {/* Header */}
-          <div className="px-6 sm:px-8 py-5 border-b border-[#edf4ff] flex items-center justify-between bg-white sticky top-0 z-10">
+          <div className="px-5 sm:px-8 py-3.5 sm:py-5 border-b border-[#edf4ff] flex items-center justify-between bg-white sticky top-0 z-10">
             <div>
               <h2 className="font-headline text-xl sm:text-2xl font-bold text-[#001d32]">
                 Update PM Log

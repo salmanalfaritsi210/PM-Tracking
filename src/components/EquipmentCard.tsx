@@ -22,7 +22,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
   return (
     <article
       onClick={() => onSelect(item)}
-      className="bg-white rounded-2xl p-5 ghost-border flex flex-col hover:bg-[#edf4ff]/60 transition-all duration-200 group relative overflow-hidden cursor-pointer shadow-xs hover:shadow-md"
+      className="bg-white rounded-2xl p-4 sm:p-5 ghost-border flex flex-col hover:bg-[#edf4ff]/60 active:scale-[0.98] transition-all duration-200 group relative overflow-hidden cursor-pointer shadow-2xs hover:shadow-md touch-manipulation"
     >
       {/* Overdue Red Left Accent Line */}
       {isOverdue && (
@@ -132,13 +132,13 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
       </div>
 
       {/* Bottom Action Buttons */}
-      <div className="flex items-center gap-2 relative z-10">
+      <div className="flex items-center gap-2 relative z-10 pt-1">
         <button
           onClick={(e) => {
             e.stopPropagation();
             onQuickLog(item);
           }}
-          className="flex-1 bg-[#d8eaff] hover:bg-[#094cb2] hover:text-white text-[#094cb2] font-label font-bold text-xs sm:text-sm py-2 px-3 rounded-xl transition-all flex justify-center items-center gap-1.5 cursor-pointer shadow-2xs"
+          className="flex-1 bg-[#d8eaff] hover:bg-[#094cb2] hover:text-white active:scale-95 text-[#094cb2] font-label font-bold text-xs sm:text-sm min-h-[44px] py-2.5 px-3 rounded-xl transition-all flex justify-center items-center gap-1.5 cursor-pointer shadow-2xs touch-manipulation"
         >
           <span className="material-symbols-outlined text-base">edit_note</span>
           <span>Quick Log</span>
@@ -150,7 +150,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
               e.stopPropagation();
               onEdit(item);
             }}
-            className="p-2 rounded-xl bg-[#edf4ff] hover:bg-[#094cb2] text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold cursor-pointer shadow-2xs"
+            className="p-2.5 min-h-[44px] min-w-[44px] rounded-xl bg-[#edf4ff] hover:bg-[#094cb2] active:scale-95 text-[#094cb2] hover:text-white transition-all text-xs font-label font-bold flex items-center justify-center cursor-pointer shadow-2xs touch-manipulation"
             title="Edit Equipment Name & Code"
           >
             <span className="material-symbols-outlined text-base">edit</span>

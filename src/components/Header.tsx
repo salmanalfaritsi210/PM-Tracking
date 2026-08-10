@@ -30,16 +30,6 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="bg-white top-0 sticky z-20 w-full flex flex-col sm:flex-row justify-between items-center px-4 sm:px-8 py-3.5 border-b border-[#c3c6d5]/20 shadow-xs">
       <div className="flex items-center justify-between w-full sm:w-auto gap-4 sm:gap-8">
-        {/* Mobile Hamburger Button */}
-        <button
-          onClick={onOpenMobileSidebar}
-          className="md:hidden text-[#434653] p-2 -ml-2 rounded-lg hover:bg-[#edf4ff] transition-colors flex items-center justify-center cursor-pointer"
-          title="Open Navigation Menu"
-          aria-label="Toggle navigation menu"
-        >
-          <span className="material-symbols-outlined text-2xl">menu</span>
-        </button>
-
         {/* Brand Title */}
         <div
           onClick={() => setCurrentTab('dashboard')}

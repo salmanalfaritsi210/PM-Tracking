@@ -120,6 +120,35 @@
   - `src/App.tsx`: Added `handleUpdateSpecs` handler to persist updated specifications to Firestore.
 - **Verification**: Verified linter and applet build compilation.
 
+---
+
+### [2026-08-10 09:20 UTC] - Milestone 15: Mobile-First & Native-Feel Smartphone Experience
+- **Task**: Overhauled layout, navigation, and interactions for full smartphone optimization following native mobile UX guidelines (Material Design / iOS HIG).
+- **Files & Components Updated**:
+  - `src/components/BottomNavBar.tsx`: Created bottom fixed navigation bar with thumb-friendly active indicator chips for quick tab switching.
+  - `src/components/MobileFab.tsx`: Created primary Floating Action Button (FAB) floating at bottom right for 1-tap PM Log creation.
+  - `src/components/HistoryDrawer.tsx` & `src/components/UpdateLogModal.tsx`: Converted into native Mobile Bottom Sheets with top drag handles (`rounded-t-3xl`, smooth touch slide animation).
+  - `src/components/EquipmentCard.tsx`: Enlarged touch targets to 44px+ minimum height, added active press scaling (`active:scale-[0.98]`).
+  - `src/App.tsx`: Added Pull-to-Refresh banner with animated indicator, updated bottom safe padding (`pb-28`), and integrated Mobile FAB & Bottom Nav.
+- **Verification**: Verified linter and applet build compilation.
+
+---
+
+### [2026-08-10 09:36 UTC] - Milestone 18: Action-Required PM Home View & Full English Language Consistency
+- **Task**: Restricted the 'Home' dashboard tab to exclusively render action-required PM items (`Due Soon` & minimal `Overdue` summary) while keeping all location sections in their dedicated tabs. Ensured 100% full English UI text consistency.
+- **Files & Components Updated**:
+  - `src/App.tsx`: Updated Home tab conditional rendering to focus solely on `Action Required PMs (Due Soon)` and compact `Minimal Overdue Summary` banner. Removed location section duplicates from Home tab. Translated all UI copy to English.
+- **Verification**: Verified linter and applet build compilation.
+
+---
+
+### [2026-08-10 09:41 UTC] - Milestone 19: Bottom Navigation Bar Streamlining
+- **Task**: Removed the 5th "More" menu item from the mobile bottom navigation bar (`BottomNavBar.tsx`) as requested.
+- **Files & Components Updated**:
+  - `src/components/BottomNavBar.tsx`: Removed the 5th "More" menu button.
+- **Verification**: Verified linter and applet build compilation.
+
+
 
 
 
