@@ -708,9 +708,16 @@ export default function App() {
                       <h4 className="font-headline text-lg font-bold text-[#001d32] mb-1.5">
                         Dock PM list will be updated soon
                       </h4>
-                      <p className="text-xs sm:text-sm text-[#434653] max-w-md font-body leading-relaxed">
-                        Data for this area is currently being compiled and will be available in the next system sync.
+                      <p className="text-xs sm:text-sm text-[#434653] max-w-md font-body leading-relaxed mb-4">
+                        Data for this area is currently being compiled and will be available in the next system sync. You can also add Dock PM entries right now.
                       </p>
+                      <button
+                        onClick={() => handleOpenUpdateModal(null)}
+                        className="btn-primary font-label text-xs sm:text-sm font-bold py-2.5 px-4 rounded-xl flex items-center gap-2 cursor-pointer shadow-xs"
+                      >
+                        <span className="material-symbols-outlined text-lg">add</span>
+                        <span>Add Dock PM Log</span>
+                      </button>
                     </div>
                   )}
                 </section>

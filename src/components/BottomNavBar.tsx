@@ -17,11 +17,12 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
     { id: 'dashboard' as NavTab, label: 'Home', icon: 'grid_view' },
     { id: 'north' as NavTab, label: 'North', icon: 'location_on' },
     { id: 'south' as NavTab, label: 'South', icon: 'location_on' },
+    { id: 'dock' as NavTab, label: 'Dock', icon: 'precision_manufacturing' },
     { id: 'history' as NavTab, label: 'History', icon: 'history' },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white/95 backdrop-blur-md border-t border-[#c3c6d5]/30 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-2 py-1.5 flex items-center justify-around pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-[#c3c6d5]/30 dark:border-slate-800 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-2 py-1.5 flex items-center justify-around pb-[max(0.375rem,env(safe-area-inset-bottom))]">
       {tabs.map((tab) => {
         const isActive = currentTab === tab.id;
         return (
@@ -38,8 +39,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
             <div
               className={`w-12 h-7 rounded-full flex items-center justify-center transition-all duration-200 ${
                 isActive
-                  ? 'bg-[#d8eaff] text-[#094cb2] shadow-2xs font-bold scale-105'
-                  : 'text-[#434653] hover:bg-[#edf4ff]'
+                  ? 'bg-[#d8eaff] dark:bg-blue-950 text-[#094cb2] dark:text-blue-400 shadow-2xs font-bold scale-105'
+                  : 'text-[#434653] dark:text-slate-400 hover:bg-[#edf4ff] dark:hover:bg-slate-800'
               }`}
             >
               <span className={`material-symbols-outlined text-xl ${isActive ? 'filled-icon' : ''}`}>
@@ -48,7 +49,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
             </div>
             <span
               className={`font-label text-[11px] mt-0.5 tracking-tight transition-colors ${
-                isActive ? 'font-bold text-[#094cb2]' : 'font-medium text-[#434653]'
+                isActive ? 'font-bold text-[#094cb2] dark:text-blue-400' : 'font-medium text-[#434653] dark:text-slate-400'
               }`}
             >
               {tab.label}
@@ -59,3 +60,5 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
     </nav>
   );
 };
+
+
