@@ -182,6 +182,49 @@
   - `src/components/Header.tsx`: Removed header `<nav>` element containing the navigation buttons.
 - **Verification**: Verified linter and applet build compilation.
 
+---
+
+### [2026-08-10 11:35 UTC] - Milestone 24: Comprehensive Dark Mode Contrast Overhaul
+- **Task**: Fixed dark mode visual contrast issues where certain cards, inputs, tables, and text elements appeared washed out or had poor readability.
+- **Files & Components Updated**:
+  - `src/index.css`: Configured `@custom-variant dark (&:where(.dark, .dark *))` in Tailwind v4 and added comprehensive dark mode overrides for background colors (`#0b132b`, `#131e3d`), high-contrast text (`#f8fafc`, `#cbd5e1`, `#60a5fa`), borders (`#23345d`), form inputs, dialogs, tables, and WCAG-compliant status badges.
+- **Verification**: Verified linter and full build compilation.
+
+---
+
+### [2026-08-10 12:18 UTC] - Milestone 25: Official Technician Profile Update
+- **Task**: Updated developer credit & user title to "Instrument Technician Logistics Department" reflecting field responsibilities in precision calibration, preventive maintenance, and real-time reliability.
+- **Files & Components Updated**:
+  - `src/components/SettingsModal.tsx`: Updated role title and detailed technical job description.
+- **Verification**: Verified linter and applet compilation.
+
+---
+
+### [2026-08-10 12:22 UTC] - Milestone 26: 100% English Language Standardization
+- **Task**: Standardized all UI copy, settings labels, modal titles, and action buttons to clean, professional English across the application.
+- **Files & Components Updated**:
+  - `src/components/SettingsModal.tsx`: Translated "Pengaturan", "Mode Tema", "Pembuat", and "Tutup" to English ("Settings", "Appearance", "Developer Credit", "Close").
+  - `src/components/Header.tsx` & `src/components/Sidebar.tsx`: Standardized Settings tooltips and labels to English.
+- **Verification**: Verified linter and applet compilation.
+
+---
+
+### [2026-08-15 09:48 UTC] - Milestone 27: Smartphone Dock Area Integration
+- **Task**: Added the Dock Area navigation tab to the smartphone bottom navigation bar to provide seamless mobile access across all three physical facility areas (North, South, Dock).
+- **Files & Components Updated**:
+  - `src/components/BottomNavBar.tsx`: Added `Dock` tab (`precision_manufacturing`) into the mobile navigation array.
+  - `src/App.tsx`: Added direct "Add Dock PM Log" action on empty state screen.
+- **Verification**: Verified linter and applet compilation.
+
+---
+
+### [2026-08-15 10:06 UTC] - Milestone 28: Bottom Navigation Bar Refinement
+- **Task**: Streamlined mobile bottom navigation bar by removing the 6th button (`+ PM Log` quick action) to maintain optimal ergonomics, touch targets, and visual balance.
+- **Files & Components Updated**:
+  - `src/components/BottomNavBar.tsx`: Removed the 6th button, leaving 5 clean, balanced primary tabs (Home, North, South, Dock, History).
+  - `src/App.tsx`: Removed redundant callback prop.
+- **Verification**: Verified linter and applet compilation.
+
 
 
 
